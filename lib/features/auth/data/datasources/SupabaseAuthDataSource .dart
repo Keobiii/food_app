@@ -30,5 +30,10 @@ class SupabaseAuthDataSource implements AuthRemoteDataSource {
     if (user == null) throw Exception("Signup failed");
     return UserModel.fromSupabase(user);
   }
+
+  @override
+  Future<void> logout() async {
+    final response = await supabase.auth.signOut();
+  }
   
 }
