@@ -6,7 +6,7 @@ import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:food_app/features/auth/presentation/screens/signup_screen.dart';
-import 'package:food_app/features/home/home_screen.dart';
+import 'package:food_app/features/onboading/onboarding_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (_) => const HomeScreen()
+                builder: (_) => const OnboardingScreen()
               )
             );
           } else if (state is AuthFailure) {
