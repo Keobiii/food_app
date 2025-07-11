@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/components/widgets/button.dart';
+import 'package:food_app/components/widgets/snack_bar.dart';
+import 'package:food_app/core/service/auth_service.dart';
 import 'package:food_app/features/auth/signup_screen.dart';
+import 'package:food_app/features/home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,7 +15,48 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   // Controllers
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();bool isPasswordHidden = true;
+  bool isConfirmPasswordHidden = true;
+
+  // Loading
+  bool isLoading = false;
+
+  // Services
+  final AuthService _authService = AuthService();
+
+  void _login() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    if (!mounted) return;
+
+    if (!email.contains(".com")) {
+      showSnackBar(context, "Invalid Email");
+      return;
+    }
+
+
+    setState(() {
+      isLoading = !isLoading;
+    });
+
+    final result = await _authService.login(email, password);
+    if (result == null) {
+      setState(() {
+        isLoading = !isLoading;
+      });
+      showSnackBar(context, "Login Successful");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => HomeScreen()),
+      );
+    } else {
+      setState(() {
+        isLoading = !isLoading;
+      });
+      showSnackBar(context, "Login Error: $result");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,21 +90,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     labelText: "Password",
                     border: OutlineInputBorder(),
                     suffixIcon: IconButton(
-                      onPressed: (){}, 
-                      icon: Icon(Icons.visibility)
+                      onPressed: () {
+                        setState(() {
+                          isPasswordHidden = !isPasswordHidden;
+                        });
+                      }, 
+                      icon: 
+                        isPasswordHidden
+                        ? Icon(Icons.visibility_off)
+                        : Icon(Icons.visibility)
                     )
                   ),
                 ),
         
                 SizedBox(height: 20),
-        
-                SizedBox(
+
+                isLoading
+                  ? Center(child: CircularProgressIndicator(),)
+                  : SizedBox(
                   width: double.maxFinite,
                   child: Button(
-                    onTap: (){}, 
+                    onTap: _login, 
                     buttonText: "Login"
                   ),
                 ),
+                
         
                 SizedBox(height: 20,),
         
