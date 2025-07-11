@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/features/auth/login_screen.dart';
-import 'package:food_app/features/auth/signup_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_app/app.dart';
+import 'package:food_app/di/di.dart';
+import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Supabase.initialize(url: "https://srnmwtpdizuzihshgmav.supabase.co", anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNybm13dHBkaXp1emloc2hnbWF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxODc2MDgsImV4cCI6MjA2Nzc2MzYwOH0.jLxL4lgGrM-BVFbgP0YRH8xfzL1lXTqwc8obFWSH570");
-  runApp(const MainApp());
+
+  // initialize supabase
+  await Supabase.initialize(
+    url: "https://srnmwtpdizuzihshgmav.supabase.co", 
+    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNybm13dHBkaXp1emloc2hnbWF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxODc2MDgsImV4cCI6MjA2Nzc2MzYwOH0.jLxL4lgGrM-BVFbgP0YRH8xfzL1lXTqwc8obFWSH570"
+  );
+
+  // initialize dependency injection (di)
+  await init();
+  
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (_) => sl<AuthBloc>(),
+        )
+      ], 
+      child: App()
+    )
+  );
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: LoginScreen()
-    );
-  }
-}
