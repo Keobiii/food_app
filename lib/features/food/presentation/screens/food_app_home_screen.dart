@@ -1,11 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:food_app/core/models/categories_model.dart';
-import 'package:food_app/core/models/product_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_app/core/utils/colors/consts.dart';
-import 'package:food_app/features/food/products_items_display.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:food_app/features/food/domain/entities/CategoryEntity.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_category/category_bloc.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_category/category_event.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_category/category_state.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_food/food_event.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_food/food_state.dart';
+import 'package:food_app/features/food/presentation/screens/products_items_display.dart';
 
 class FoodAppHomeScreen extends StatefulWidget {
   const FoodAppHomeScreen({super.key});
@@ -15,64 +18,15 @@ class FoodAppHomeScreen extends StatefulWidget {
 }
 
 class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
-  final String CATEGORY_TABLE = "category_items";
-  final String FOOD_PRODUCT_DB = "food_product";
-  late Future<List<CategoryModel>> fututeCategories = fetchCategories();
-  late Future<List<FoodModel>> fututeFoodProducts = Future.value([]);
-  List<CategoryModel> categories = [];
+  List<CategoryEntity> categories = [];
   String? selectedCategory;
 
   @override
   void initState() {
     super.initState();
-    _initializeData();
+    context.read<CategoryBloc>().add(GetCategoryRequested());
   }
 
-  void _initializeData() async {
-    try {
-      final categories = await fututeCategories;
-      if (categories.isNotEmpty) {
-        setState(() {
-          this.categories = categories;
-          selectedCategory = categories.first.name;
-
-          fututeFoodProducts = fetchFoodProduct(selectedCategory!);
-        });
-      }
-    } catch (e) {
-      print("Initialize Error: $e");
-    }
-  }
-
-  // fetch category from supabase
-  Future<List<CategoryModel>> fetchCategories() async {
-    try {
-      final response =
-          await Supabase.instance.client.from(CATEGORY_TABLE).select();
-
-      return (response as List)
-          .map((json) => CategoryModel.fromJson(json))
-          .toList();
-    } catch (e) {
-      print("Error fetching categories: $e");
-      return [];
-    }
-  }
-
-  // fetch products
-  Future<List<FoodModel>> fetchFoodProduct(String category) async {
-    try {
-      final response =
-          await Supabase.instance.client.from(FOOD_PRODUCT_DB).select().eq("category", category);
-
-      return (response as List)
-          .map((json) => FoodModel.fromJson(json))
-          .toList();
-    } catch (e) {
-      print("Error fetching food product: $e");
-      return [];
-    }
-  }
 
  @override
   Widget build(BuildContext context) {
@@ -111,41 +65,47 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
 
   Widget _buildProductSection() {
     return SizedBox(
-      height: 300, 
-      child: FutureBuilder<List<FoodModel>>(
-        future: fututeFoodProducts,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+      height: 300,
+      child: BlocBuilder<FoodBloc, FoodState>(
+        builder: (context, state) {
+          if (state is FoodLoading) {
+            return const Center(child: CircularProgressIndicator());
           }
 
-          if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
+          if (state is FoodError) {
+            return Center(child: Text("Error: ${state.message}"));
           }
 
-          final products = snapshot.data ?? [];
-          if (products.isEmpty) {
-            return Center(child: Text("No Products found"));
+          if (state is FoodLoaded) {
+            final products = state.foodList;
+
+            if (products.isEmpty) {
+              return const Center(child: Text("No Products found"));
+            }
+
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: products.length,
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              itemBuilder: (context, index) {
+                final product = products[index];
+                return Padding(
+                  padding: EdgeInsets.only(
+                    left: index == 0 ? 0 : 25,
+                    right: index == products.length - 1 ? 25 : 0,
+                  ),
+                  child: ProductsItemsDisplay(foodEntity: product),
+                );
+              },
+            );
           }
 
-          return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: products.length,
-            padding: EdgeInsets.symmetric(horizontal: 25),
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  left: 25,
-                  right: index == products.length - 1 ? 25 : 0
-                ),
-                child: ProductsItemsDisplay(foodModel: products[index]),
-              );
-            },
-          );
+          return const SizedBox.shrink();
         },
       ),
     );
   }
+
 
 
   Padding _viewAll() {
@@ -184,88 +144,100 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
   }
 
   Widget _buildCategoryList() {
-    return FutureBuilder(
-      future: fututeCategories,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+    return BlocBuilder<CategoryBloc, CategoryState>(
+      builder: (context, state) {
+        if (state is CategoryLoading) {
           return Center(child: CircularProgressIndicator());
         }
 
-        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-          return SizedBox.shrink();
+        if (state is CategoryFailedResponse) {
+          return Center(child: Text("Failed to load categories"));
         }
 
-        return SizedBox(
-          height: 60,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: BouncingScrollPhysics(),
-            itemCount: categories.length,
-            itemBuilder: (context, index) {
-              final category = categories[index];
-              return Padding(
-                padding: EdgeInsets.only(left: index == 0 ? 15 : 0, right: 15),
-                child: GestureDetector(
-                  onTap: () => handleCategoryTap(category.name),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                    decoration: BoxDecoration(
-                      color:
-                          selectedCategory == category.name
-                              ? Colors.red
-                              : grey1,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color:
-                                selectedCategory == category.name
-                                    ? Colors.white
-                                    : Colors.transparent,
-                            shape: BoxShape.circle,
+        if (state is CategorySuccessResponse) {
+          final fetchedCategories = state.category;
+
+          if (selectedCategory == null && state.category.isNotEmpty) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                categories = state.category; 
+                selectedCategory = state.category.first.name;
+
+                context.read<FoodBloc>().add(FetchFoodByCategory(selectedCategory!));
+              });
+            });
+          }
+
+          return SizedBox(
+            height: 60,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: fetchedCategories.length,
+              itemBuilder: (context, index) {
+                final category = fetchedCategories[index];
+
+                return Padding(
+                  padding: EdgeInsets.only(left: index == 0 ? 15 : 0, right: 15),
+                  child: GestureDetector(
+                    onTap: () => handleCategoryTap(category.name),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                      decoration: BoxDecoration(
+                        color:
+                            selectedCategory == category.name ? Colors.red : grey1,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: selectedCategory == category.name
+                                  ? Colors.white
+                                  : Colors.transparent,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Image.network(
+                              category.image,
+                              width: 20,
+                              height: 20,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.fastfood),
+                            ),
                           ),
-                          child: Image.network(
-                            category.image,
-                            width: 20,
-                            height: 20,
-                            errorBuilder:
-                                (context, error, stackTrace) =>
-                                    Icon(Icons.fastfood),
+                          SizedBox(width: 15),
+                          Text(
+                            category.name,
+                            style: TextStyle(
+                              color: selectedCategory == category.name
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 15),
-                        Text(
-                          category.name,
-                          style: TextStyle(
-                            color:
-                                selectedCategory == category.name
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-        );
+                );
+              },
+            ),
+          );
+        }
+
+        return SizedBox.shrink(); // default
       },
     );
   }
+
 
   void handleCategoryTap(String category) {
     if (selectedCategory == category) return;
     setState(() {
       selectedCategory = category;
 
-      fututeFoodProducts = fetchFoodProduct(category);
+      context.read<FoodBloc>().add(FetchFoodByCategory(category));
     });
   }
 

@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/core/models/product_model.dart';
+import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
 
 class ProductsItemsDisplay extends StatefulWidget {
-  final FoodModel foodModel;
-  const ProductsItemsDisplay({super.key, required this.foodModel});
+  final FoodEntity foodEntity;
+  const ProductsItemsDisplay({super.key, required this.foodEntity});
 
   @override
   State<ProductsItemsDisplay> createState() => _ProductsItemsDisplayState();
@@ -57,7 +58,7 @@ class _ProductsItemsDisplayState extends State<ProductsItemsDisplay> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.network(
-                  widget.foodModel.imageCard,
+                  widget.foodEntity.imageCard,
                   height: 140,
                   width: 150,
                   fit: BoxFit.fill,
@@ -65,7 +66,7 @@ class _ProductsItemsDisplayState extends State<ProductsItemsDisplay> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 15),
                   child: Text(
-                    widget.foodModel.name,
+                    widget.foodEntity.name,
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 18,
@@ -75,7 +76,7 @@ class _ProductsItemsDisplayState extends State<ProductsItemsDisplay> {
                   ),
                 ),
                 Text(
-                  widget.foodModel.specialItems,
+                  widget.foodEntity.specialItems,
                   style: TextStyle(
                     height: 0.1,
                     letterSpacing: 0.5,
@@ -93,7 +94,7 @@ class _ProductsItemsDisplayState extends State<ProductsItemsDisplay> {
                         style: TextStyle(fontSize: 14, color: Colors.red),
                       ),
                       TextSpan(
-                        text: "${widget.foodModel.price}",
+                        text: "${widget.foodEntity.price}",
                         style: TextStyle(fontSize: 25, color: Colors.black),
                       ),
                     ],
