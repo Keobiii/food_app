@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/core/models/on_bording_model.dart';
 import 'package:food_app/core/utils/colors/consts.dart';
-import 'package:food_app/features/home/app_main_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class OnboardingScreen extends StatefulWidget {

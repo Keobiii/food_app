@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_app/features/food/presentation/screens/food_app_home_screen.dart';
-import 'package:food_app/features/profile/profile_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -22,15 +20,6 @@ class _AppMainScreenState extends State<AppMainScreen> {
     '/profile',
     '/cart'
   ];
-
-  void _onTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-
-    context.go(tabs[index]);
-  } 
-
 
   @override
   Widget build(BuildContext context) {

@@ -67,7 +67,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   height: 300,
                   fit: BoxFit.cover,
                 ),
-
                 TextField(
                   controller: emailController,
                   decoration: InputDecoration(
@@ -75,9 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-
                 SizedBox(height: 20),
-
                 TextField(
                   controller: passwordController,
                   decoration: InputDecoration(
@@ -98,9 +95,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   obscureText: isPasswordHidden,
                 ),
-
                 SizedBox(height: 20),
-
                 TextField(
                   controller: confirmPasswordController,
                   decoration: InputDecoration(
@@ -121,9 +116,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   obscureText: isConfirmPasswordHidden,
                 ),
-
                 SizedBox(height: 20),
-
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     if (state is AuthLoading) {
@@ -139,10 +132,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     );
                   },
                 ),
-
-
                 SizedBox(height: 20),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

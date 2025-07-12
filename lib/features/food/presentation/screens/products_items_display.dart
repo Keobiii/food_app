@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_app/core/models/product_model.dart';
 import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
 
 class ProductsItemsDisplay extends StatefulWidget {

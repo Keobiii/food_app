@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
             showSnackBar(context, "Login Successful");
             final uid = state.user.id;
             print("UID From BloC: $uid" );
-            context.go('/home');
+            context.go('/onboarding');
           } else if (state is AuthFailure) {
             showSnackBar(context, "Login Error: ${state.message}");
           }

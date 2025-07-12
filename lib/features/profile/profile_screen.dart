@@ -5,7 +5,6 @@ import 'package:food_app/features/auth/data/datasources/AuthLocalDataSource.dart
 import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
-import 'package:food_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatefulWidget {
