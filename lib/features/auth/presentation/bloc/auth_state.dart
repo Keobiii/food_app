@@ -11,7 +11,7 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthSuccess extends AuthState {
-  final Userentity user;
+  final UserEntity user;
 
   AuthSuccess(this.user);
 

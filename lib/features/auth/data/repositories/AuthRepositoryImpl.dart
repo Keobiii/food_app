@@ -1,24 +1,29 @@
+import 'package:food_app/features/auth/data/datasources/AuthLocalDataSource.dart';
 import 'package:food_app/features/auth/data/datasources/AuthRemoteDatasource.dart';
 import 'package:food_app/features/auth/domain/entities/UserEntity.dart';
 import 'package:food_app/features/auth/domain/repositories/AuthRepository.dart';
 
 class AuthRepositoryImpl implements Authrepository {
   final AuthRemoteDataSource remoteDatasource;
+  final AuthLocalDatasource localDatasource;
 
-  AuthRepositoryImpl(this.remoteDatasource);
+  AuthRepositoryImpl({required this.remoteDatasource, required this.localDatasource});
 
   @override
-  Future<Userentity> login(String email, String password) {
-    return remoteDatasource.login(email, password);
+  Future<UserEntity> login(String email, String password) async{
+    final user = await remoteDatasource.login(email, password);
+    await localDatasource.cachedUserId(user.id);
+    return user;
   }
 
   @override
-  Future<Userentity> register(String email, String password) {
+  Future<UserEntity> register(String email, String password) {
     return remoteDatasource.register(email, password);
   }
 
   @override
-  Future<void> logout() {
-    return remoteDatasource.logout();
+  Future<void> logout() async{
+    await remoteDatasource.logout();
+    await localDatasource.clearUserId();
   }
 }

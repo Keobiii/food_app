@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:food_app/features/auth/presentation/screens/login_screen.dart';
@@ -12,18 +13,23 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final sl = GetIt.instance;
-
-GoRouter createRouter() {
-
-  return GoRouter(
+final GoRouter router =  GoRouter(
     initialLocation: '/home',
+    redirect: (context, state) async {
+      // return asyncRedirect(context, state);
+    },
 
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
 
       ShellRoute(
-        builder: (context, state, child) => AppMainScreen(child: child),
+        builder: (context, state, child) {
+          final authState = context.watch<AuthBloc>().state;
+          final userUid = authState is AuthSuccess ? authState.user.id : 0;
+          print("UID From Router: $userUid");
+          return AppMainScreen(child: child);
+
+        },
         routes: [
           GoRoute(
             path: '/onboarding',
@@ -70,21 +76,3 @@ GoRouter createRouter() {
       ),
     ],
   );
-}
-
-class GoRouterRefreshStream extends ChangeNotifier {
-  GoRouterRefreshStream(Stream<dynamic> stream) {
-    _subscription = stream.listen((_) {
-      debugPrint('🔁 AuthBloc state changed. Triggering redirect.');
-      notifyListeners();
-    });
-  }
-
-  late final StreamSubscription<dynamic> _subscription;
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-}

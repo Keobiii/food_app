@@ -8,8 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class App extends StatelessWidget {
-  final GoRouter router;
-  const App({super.key, required this.router});
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {

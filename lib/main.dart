@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_app/app.dart';
 import 'package:food_app/di/di.dart' as di;
-import 'package:food_app/core/router/app_router.dart' as router;
 import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async{
@@ -19,8 +17,6 @@ void main() async{
   // initialize dependency injection (di)
   await di.init();
 
-  final routerInstance = router.createRouter();
-
   runApp(
     MultiBlocProvider(
       providers: [
@@ -28,7 +24,7 @@ void main() async{
           create: (_) => di.sl<AuthBloc>(),
         ),
       ],
-      child: App(router: routerInstance),
+      child: App(),
     ),
   );
 }
