@@ -9,6 +9,7 @@ import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dar
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_event.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_state.dart';
 import 'package:food_app/features/food/presentation/screens/products_items_display.dart';
+import 'package:go_router/go_router.dart';
 
 class FoodAppHomeScreen extends StatefulWidget {
   const FoodAppHomeScreen({super.key});
@@ -27,8 +28,7 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
     context.read<CategoryBloc>().add(GetCategoryRequested());
   }
 
-
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -61,7 +61,6 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
       ),
     );
   }
-
 
   Widget _buildProductSection() {
     return SizedBox(
@@ -106,41 +105,42 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
     );
   }
 
-
-
   Padding _viewAll() {
     return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Popular Now",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              GestureDetector(
-                child: Row(
-                  children: [
-                    Text("View All", style: TextStyle(color: Colors.orange)),
-                    SizedBox(width: 5),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: Colors.white,
-                        size: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Popular Now",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-        );
+          GestureDetector(
+            onTap: () {
+              context.go('/viewAllProduct');
+            },
+            child: Row(
+              children: [
+                Text("View All", style: TextStyle(color: Colors.orange)),
+                SizedBox(width: 5),
+                Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: Colors.white,
+                    size: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildCategoryList() {
@@ -160,10 +160,12 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
           if (selectedCategory == null && state.category.isNotEmpty) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
-                categories = state.category; 
+                categories = state.category;
                 selectedCategory = state.category.first.name;
 
-                context.read<FoodBloc>().add(FetchFoodByCategory(selectedCategory!));
+                context.read<FoodBloc>().add(
+                  FetchFoodByCategory(selectedCategory!),
+                );
               });
             });
           }
@@ -177,14 +179,22 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
                 final category = fetchedCategories[index];
 
                 return Padding(
-                  padding: EdgeInsets.only(left: index == 0 ? 15 : 0, right: 15),
+                  padding: EdgeInsets.only(
+                    left: index == 0 ? 15 : 0,
+                    right: 15,
+                  ),
                   child: GestureDetector(
                     onTap: () => handleCategoryTap(category.name),
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
                         color:
-                            selectedCategory == category.name ? Colors.red : grey1,
+                            selectedCategory == category.name
+                                ? Colors.red
+                                : grey1,
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Row(
@@ -192,26 +202,29 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
                           Container(
                             padding: EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: selectedCategory == category.name
-                                  ? Colors.white
-                                  : Colors.transparent,
+                              color:
+                                  selectedCategory == category.name
+                                      ? Colors.white
+                                      : Colors.transparent,
                               shape: BoxShape.circle,
                             ),
                             child: Image.network(
                               category.image,
                               width: 20,
                               height: 20,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(Icons.fastfood),
+                              errorBuilder:
+                                  (context, error, stackTrace) =>
+                                      Icon(Icons.fastfood),
                             ),
                           ),
                           SizedBox(width: 15),
                           Text(
                             category.name,
                             style: TextStyle(
-                              color: selectedCategory == category.name
-                                  ? Colors.white
-                                  : Colors.black,
+                              color:
+                                  selectedCategory == category.name
+                                      ? Colors.white
+                                      : Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -230,7 +243,6 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
       },
     );
   }
-
 
   void handleCategoryTap(String category) {
     if (selectedCategory == category) return;
