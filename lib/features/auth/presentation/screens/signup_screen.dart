@@ -5,7 +5,7 @@ import 'package:food_app/core/utils/widgets/snack_bar.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
-import 'package:food_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -51,12 +51,7 @@ class _SignupScreenState extends State<SignupScreen> {
             
           } else if (state is AuthSuccess) {
             showSnackBar(context, "Signup Successful");
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const LoginScreen()
-              )
-            );
+            context.go('/login');
           } else if (state is AuthFailure) {
             showSnackBar(context, "Signup Error: ${state.message}");
           }
@@ -157,10 +152,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) => LoginScreen()),
-                        );
+                        context.go('/login');
                       },
                       child: Text(
                         "Login here",

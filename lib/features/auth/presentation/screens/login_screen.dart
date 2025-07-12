@@ -5,8 +5,6 @@ import 'package:food_app/core/utils/widgets/snack_bar.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
-import 'package:food_app/features/auth/presentation/screens/signup_screen.dart';
-import 'package:food_app/features/onboading/onboarding_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -48,7 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
             showSnackBar(context, "Login Successful");
             final uid = state.user.id;
             print("UID From BloC: $uid" );
-
             context.go('/home');
           } else if (state is AuthFailure) {
             showSnackBar(context, "Login Error: ${state.message}");
@@ -65,7 +62,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 300,
                   fit: BoxFit.cover,
                 ),
-
                 TextField(
                   controller: emailController,
                   decoration: InputDecoration(
@@ -73,9 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-
                 SizedBox(height: 20),
-
                 TextField(
                   controller: passwordController,
                   decoration: InputDecoration(
@@ -94,9 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-
                 SizedBox(height: 20),
-
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     if (state is AuthLoading) {
@@ -112,11 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   },
                 ),
-
-              
-
                 SizedBox(height: 20),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -126,10 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) => SignupScreen()),
-                        );
+                        context.go('/signup');
                       },
                       child: Text(
                         "Signup here",

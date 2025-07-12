@@ -1,17 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:food_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:food_app/features/auth/presentation/screens/signup_screen.dart';
 import 'package:food_app/features/food/presentation/screens/food_app_home_screen.dart';
 import 'package:food_app/features/home/app_main_screen.dart';
 import 'package:food_app/features/onboading/onboarding_screen.dart';
 import 'package:food_app/features/profile/profile_screen.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final GoRouter router =  GoRouter(
     initialLocation: '/home',
@@ -31,6 +28,14 @@ final GoRouter router =  GoRouter(
 
         },
         routes: [
+          GoRoute(
+            path: '/signup',
+            name: 'signup',
+            pageBuilder:
+                (context, state) =>
+                    const NoTransitionPage(child: SignupScreen()),
+          ),
+
           GoRoute(
             path: '/onboarding',
             name: 'onboarding',
