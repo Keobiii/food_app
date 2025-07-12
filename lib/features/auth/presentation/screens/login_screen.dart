@@ -7,6 +7,7 @@ import 'package:food_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:food_app/features/auth/presentation/screens/signup_screen.dart';
 import 'package:food_app/features/onboading/onboarding_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -45,12 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
             // showSnackBar(context, "Loading...");
           } else if (state is AuthSuccess) {
             showSnackBar(context, "Login Successful");
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const OnboardingScreen()
-              )
-            );
+            context.go('/onboarding');
           } else if (state is AuthFailure) {
             showSnackBar(context, "Login Error: ${state.message}");
           }

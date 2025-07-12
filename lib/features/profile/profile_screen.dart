@@ -4,6 +4,7 @@ import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:food_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,12 +20,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthInitial) {
-            Navigator.pushReplacement(
-              context, 
-              MaterialPageRoute(
-                builder: (_) => LoginScreen(),
-              )
-            );
+            context.go('/login');
           }
         },
         child: Center(
