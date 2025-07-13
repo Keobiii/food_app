@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductsItemsDisplay extends StatefulWidget {
   final FoodEntity foodEntity;
@@ -14,7 +15,9 @@ class _ProductsItemsDisplayState extends State<ProductsItemsDisplay> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        context.push('/foodDetails', extra: widget.foodEntity);
+      },
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -55,11 +58,14 @@ class _ProductsItemsDisplayState extends State<ProductsItemsDisplay> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(
-                  widget.foodEntity.imageCard,
-                  height: 140,
-                  width: 150,
-                  fit: BoxFit.fill,
+                Hero(
+                  tag: widget.foodEntity.imageCard,
+                  child: Image.network(
+                    widget.foodEntity.imageCard,
+                    height: 120,
+                    width: 150,
+                    fit: BoxFit.fill,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 15),

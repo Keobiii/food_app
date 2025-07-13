@@ -117,7 +117,7 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
           ),
           GestureDetector(
             onTap: () {
-              context.go('/viewAllProduct');
+              context.push('/viewAllProduct');
             },
             child: Row(
               children: [

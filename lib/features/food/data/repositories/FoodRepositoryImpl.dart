@@ -23,4 +23,22 @@ final FoodRemoteDataSource remoteDataSource;
       time: model.time,
     )).toList();
   }
+
+
+  @override
+  Future<List<FoodEntity>> getAllFoods() async {
+    final models = await remoteDataSource.getAllFoods();
+    return models.map((model) => FoodEntity(
+      id: model.id,
+      imageCard: model.imageCard,
+      imageDetail: model.imageDetail,
+      name: model.name,
+      price: model.price,
+      rate: model.rate,
+      specialItems: model.specialItems,
+      category: model.category,
+      kcal: model.kcal,
+      time: model.time,
+    )).toList();
+  }
 }

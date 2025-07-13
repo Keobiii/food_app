@@ -4,6 +4,8 @@ import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:food_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:food_app/features/auth/presentation/screens/signup_screen.dart';
+import 'package:food_app/features/food/data/models/FoodModel.dart';
+import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
 import 'package:food_app/features/food/presentation/screens/food_app_home_screen.dart';
 import 'package:food_app/features/food/presentation/screens/food_details_screen.dart';
 import 'package:food_app/features/food/presentation/screens/view_all_products_screen.dart';
@@ -63,9 +65,18 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/foodDetails',
           name: 'foodDetails',
-          pageBuilder:
-              (context, state) =>
-                  const NoTransitionPage(child: FoodDetailsScreen()),
+          pageBuilder: (context, state) {
+            final food = state.extra;
+            if (food is! FoodEntity) {
+              return const MaterialPage(child: Scaffold(body: Center(child: Text("Null Parameter"),),));
+            }
+
+            return MaterialPage(
+              key: state.pageKey,
+              child: FoodDetailsScreen(food: food),
+              // child: Scaffold(body: Center(child: Text('Key: ${state.pageKey}'),),),
+            );
+          }
         ),
 
         GoRoute(

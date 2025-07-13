@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/core/models/product_model.dart';
-import 'package:food_app/features/food/presentation/screens/ProductsItemsDisplay2.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_food/food_event.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_food/food_state.dart';
+import 'package:food_app/features/food/presentation/screens/products_items_display.dart';
 
 class ViewAllProductsScreen extends StatefulWidget {
   const ViewAllProductsScreen({super.key});
@@ -11,31 +14,14 @@ class ViewAllProductsScreen extends StatefulWidget {
 }
 
 class _ViewAllProductsScreenState extends State<ViewAllProductsScreen> {
-  final supabase = Supabase.instance.client;
-  List<FoodModel> products = [];
-  bool isLoading = true;
+  List<FoodEntity> products = [];
 
   @override
   void initState() {
-    fetchFoodProduct();
+    context.read<FoodBloc>().add(FetchAllFood());
     super.initState();
   }
 
-  Future<void> fetchFoodProduct() async {
-    try {
-      final response =
-          await Supabase.instance.client.from("food_product").select();
-      final data = response as List;
-
-      setState(() {
-        products = data.map((json) => FoodModel.fromJson(json)).toList();
-      });
-
-      isLoading = false;
-    } catch (e) {
-      print("Error fetching all products: $e");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +33,24 @@ class _ViewAllProductsScreenState extends State<ViewAllProductsScreen> {
         centerTitle: true,
         forceMaterialTransparency: true,
       ),
-      body:
-          isLoading
-              ? Center(child: CircularProgressIndicator())
-              : GridView.builder(
+      body: BlocBuilder<FoodBloc, FoodState>(
+        builder: (context, state) {
+          if (state is FoodLoading) {
+            return const Center(child: CircularProgressIndicator(),);
+          }
+
+          if (state is FoodError) {
+            return Center(child: Text("Error: ${state.message}"),);
+          }
+
+          if (state is FoodLoaded) {
+            final products = state.foodList;
+
+            if (products.isEmpty) {
+              return const Center(child: Text("No Products found"),);
+            }
+
+            return  GridView.builder(
                 itemCount: products.length,
                 padding: EdgeInsets.all(10),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -59,9 +59,15 @@ class _ViewAllProductsScreenState extends State<ViewAllProductsScreen> {
                   crossAxisSpacing: 8,
                 ),
                 itemBuilder: (context, index) {
-                  return ProductsItemsDisplay2(foodEntity: products[index]);
+                  return ProductsItemsDisplay(foodEntity: products[index]);
                 },
-              ),
+              );
+          }
+
+          return const SizedBox.shrink();
+        }
+        
+      )
     );
   }
 }

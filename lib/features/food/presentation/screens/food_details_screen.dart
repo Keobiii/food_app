@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/core/utils/colors/consts.dart';
-import 'package:food_app/features/food/data/models/FoodModel.dart';
+import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
 import 'package:go_router/go_router.dart';
 import 'package:readmore/readmore.dart';
 
 class FoodDetailsScreen extends StatefulWidget {
-  const FoodDetailsScreen({super.key});
+  final FoodEntity food;
+  const FoodDetailsScreen({super.key, required this.food});
 
   @override
   State<FoodDetailsScreen> createState() => _FoodDetailsScreenState();
@@ -53,9 +54,9 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                   SizedBox(height: 90),
                   Center(
                     child: Hero(
-                      tag: "123",
+                      tag: widget.food.imageCard,
                       child: Image.asset(
-                        "assets/food-delivery/product/cheese-burger1.png",
+                        widget.food.imageDetail,
                         height: 320,
                         fit: BoxFit.fill,
                       ),
@@ -112,14 +113,14 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Burgir",
+                            widget.food.name,
                             style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            "Burgir Details...Lorem Ipsum",
+                            widget.food.specialItems,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w300,
@@ -138,7 +139,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                               style: TextStyle(color: red, fontSize: 14),
                             ),
                             TextSpan(
-                              text: "100",
+                              text: "${widget.food.price}",
                               style: TextStyle(
                                 fontSize: 30,
                                 color: Colors.black,
@@ -153,11 +154,11 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      foodInfo("assets/food-delivery/icon/star.png", "4/5"),
-                      foodInfo("assets/food-delivery/icon/fire.png", "50Kcal"),
+                      foodInfo("assets/food-delivery/icon/star.png", "${widget.food.rate}/5"),
+                      foodInfo("assets/food-delivery/icon/fire.png", "${widget.food.kcal}Kcal"),
                       foodInfo(
                         "assets/food-delivery/icon/time.png",
-                        "20 - 30 mins",
+                        "${widget.food.time}",
                       ),
                     ],
                   ),

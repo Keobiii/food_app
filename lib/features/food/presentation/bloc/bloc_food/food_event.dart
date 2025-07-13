@@ -13,3 +13,5 @@ class FetchFoodByCategory extends FoodEvent {
   @override
   List<Object?> get props => [category];
 }
+
+class FetchAllFood extends FoodEvent {}
