@@ -19,6 +19,7 @@ import 'package:food_app/features/food/domain/repositories/CartRepository.dart';
 import 'package:food_app/features/food/domain/repositories/CategoryRepository.dart';
 import 'package:food_app/features/food/domain/repositories/FoodRepository.dart';
 import 'package:food_app/features/food/domain/usecases/AddToCartUseCase.dart';
+import 'package:food_app/features/food/domain/usecases/FetchAllUserCartUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetAllFoodsUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetCategoriesUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetFoodByCategoryUseCase.dart';
@@ -89,6 +90,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetAllFoodsUseCase(sl()));
 
   sl.registerLazySingleton(() => AddToCartUseCase(sl()));
+  sl.registerLazySingleton(() => FetchAllUserCartUseCase(sl()));
 
   // bloc
   sl.registerFactory(() => AuthBloc(
@@ -107,6 +109,7 @@ Future<void> init() async {
   ));
 
   sl.registerFactory(() => CartBloc(
-    addToCartUseCase: sl()
+    addToCartUseCase: sl(), 
+    fetchAllUserCartUseCase: sl()
   ));
 }

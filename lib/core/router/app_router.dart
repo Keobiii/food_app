@@ -9,6 +9,7 @@ import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
 import 'package:food_app/features/food/presentation/screens/food_app_home_screen.dart';
 import 'package:food_app/features/food/presentation/screens/food_details_screen.dart';
 import 'package:food_app/features/food/presentation/screens/view_all_products_screen.dart';
+import 'package:food_app/features/food/presentation/screens/view_all_user_cart_screen.dart';
 import 'package:food_app/features/home/app_main_screen.dart';
 import 'package:food_app/features/onboading/onboarding_screen.dart';
 import 'package:food_app/features/profile/profile_screen.dart';
@@ -101,8 +102,7 @@ final GoRouter router = GoRouter(
           name: 'cart',
           pageBuilder:
               (context, state) => const NoTransitionPage(
-                child: Scaffold(body: Center(child: Text('Cart'))),
-              ),
+                child: ViewAllUserCartScreen()),
         ),
       ],
     ),

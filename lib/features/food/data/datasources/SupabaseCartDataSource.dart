@@ -1,5 +1,6 @@
 import 'package:food_app/features/food/data/datasources/CartRemoteDataSource.dart';
 import 'package:food_app/features/food/data/models/CartModel.dart';
+import 'package:food_app/features/food/domain/entities/CartEntity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseCartDataSource implements CartRemoveDataSource {
@@ -10,10 +11,20 @@ class SupabaseCartDataSource implements CartRemoveDataSource {
   @override
   Future<void> addToCart(CartModel cartModel) async {
     try {
-      await client.from('cart_items').insert(cartModel.toJson());
+      final response = await client.from('cart_items').insert(cartModel.toJson());
+      print("Inserted cart: $response");
     } catch (error) {
       throw Exception('Failed to add item to cart: $error');
     }
   }
 
+  @override
+  Future<List<CartEntity>> fetchUserCart(String userId) async{
+    final response = await client
+        .from("cart_items")
+        .select()
+        .eq("user_id", userId);
+
+    return (response as List).map((json) => CartModel.fromJson(json)).toList();
+  }
 }

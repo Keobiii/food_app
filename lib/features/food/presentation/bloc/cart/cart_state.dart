@@ -27,3 +27,12 @@ class CartError extends CartState {
   @override
   List<Object?> get props => [message];
 }
+
+class CartLoaded extends CartState {
+  final List<CartEntity> carts;
+
+  CartLoaded(this.carts);
+
+  @override
+  List<Object?> get props => [carts];
+}

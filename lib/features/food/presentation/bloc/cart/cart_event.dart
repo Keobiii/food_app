@@ -15,3 +15,12 @@ class AddToCartRequested  extends CartEvent {
   List<Object?> get props => [cart];
 }
 
+class FetchAllUserCartRequested extends CartEvent {
+  final String userId;
+
+  FetchAllUserCartRequested(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
+}
+

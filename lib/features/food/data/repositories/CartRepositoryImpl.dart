@@ -11,11 +11,23 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<void> addToCart(CartEntity cart) async {
     final cartModel = CartModel(
+      id: cart.id,
       userId: cart.userId,
       foodId: cart.foodId,
       quantity: cart.quantity,
     );
 
     await removeDataSource.addToCart(cartModel);
+  }
+  
+  @override
+  Future<List<CartEntity>> fetchUserCart(String userId) async {
+    final carts = await removeDataSource.fetchUserCart(userId);
+      return carts.map((cart) => CartEntity(
+        id: cart.id,
+        userId: userId, 
+        foodId: cart.foodId, 
+        quantity: cart.quantity
+      )).toList();
   }
 }
