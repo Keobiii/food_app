@@ -39,5 +39,11 @@ class CartRepositoryImpl implements CartRepository {
   Future<void> removeFromCart(String cartId) async {
     await removeDataSource.removeCartItem(cartId);
   }
+
+  @override
+  Future<void> updateCartQuantity(String cartId, int delta) {
+    return removeDataSource.updateCartQuantity(cartId, delta);
+  }
+
   
 }

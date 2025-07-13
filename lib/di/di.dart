@@ -25,6 +25,7 @@ import 'package:food_app/features/food/domain/usecases/GetCategoriesUseCase.dart
 import 'package:food_app/features/food/domain/usecases/GetFoodByCategoryUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetFoodByIdUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/RemoveCartItemUseCase.dart';
+import 'package:food_app/features/food/domain/usecases/UpdateCartQuantityUseCase.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_category/category_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/cart/cart_bloc.dart';
@@ -100,6 +101,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => FetchAllUserCartUseCase(sl()));
   sl.registerLazySingleton(() => GetFoodByIdUseCase(sl()));
   sl.registerLazySingleton(() => RemoveCartItemUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateCartQuantityUseCase(sl()));
 
   // bloc
   sl.registerFactory(() => AuthBloc(
@@ -121,6 +123,7 @@ Future<void> init() async {
   sl.registerFactory(() => CartBloc(
     addToCartUseCase: sl(), 
     fetchAllUserCartUseCase: sl(),
-    removeCartItemUseCase: sl()
+    removeCartItemUseCase: sl(), 
+    updateCartQuantityUseCase: sl()
   ));
 }

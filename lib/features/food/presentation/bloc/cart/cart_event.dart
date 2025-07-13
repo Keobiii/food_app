@@ -6,7 +6,7 @@ abstract class CartEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class AddToCartRequested  extends CartEvent {
+class AddToCartRequested extends CartEvent {
   final CartEntity cart;
 
   AddToCartRequested(this.cart);
@@ -26,11 +26,29 @@ class FetchAllUserCartRequested extends CartEvent {
 
 class RemoveCartItemRequested extends CartEvent {
   final String cartId;
+  final String userId;
 
-  RemoveCartItemRequested(this.cartId);
+  RemoveCartItemRequested(this.cartId, this.userId);
 
   @override
-  List<Object?> get props => [cartId];
+  List<Object?> get props => [cartId, userId];
 }
 
+class IncreaseCartQuantity extends CartEvent {
+  final String cartId;
+  final String userId;
 
+  IncreaseCartQuantity({required this.cartId, required this.userId});
+}
+
+class DecreaseCartQuantity extends CartEvent {
+  final String cartId;
+  final String userId;
+  final int currentQuantity;
+
+  DecreaseCartQuantity({
+    required this.cartId,
+    required this.userId,
+    required this.currentQuantity,
+  });
+}

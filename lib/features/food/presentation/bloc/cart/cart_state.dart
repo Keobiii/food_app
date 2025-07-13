@@ -37,3 +37,12 @@ class CartLoaded extends CartState {
   @override
   List<Object?> get props => [carts];
 }
+
+class CartAlreadyExists extends CartState {
+  final String message;
+
+  CartAlreadyExists(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

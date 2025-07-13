@@ -2,6 +2,8 @@ import 'package:food_app/features/food/data/datasources/CartRemoteDataSource.dar
 import 'package:food_app/features/food/data/models/CartModel.dart';
 import 'package:food_app/features/food/domain/entities/CartEntity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:postgrest/src/types.dart';
+import 'package:postgrest/postgrest.dart';
 
 class SupabaseCartDataSource implements CartRemoveDataSource {
   final SupabaseClient client;
@@ -43,6 +45,38 @@ class SupabaseCartDataSource implements CartRemoveDataSource {
       }
     } catch (e) {
       throw Exception('Failed to remove item: $e');
+    }
+  }
+
+  @override
+  Future<void> updateCartQuantity(String cartId, int delta) async {
+    try {
+      // Step 1: Fetch current quantity
+      final fetchResponse = await client
+          .from('cart_items')
+          .select('quantity')
+          .eq('id', cartId)
+          .single();
+
+      if (fetchResponse == null || fetchResponse['quantity'] == null) {
+        throw Exception('Cart item not found');
+      }
+
+      final currentQuantity = fetchResponse['quantity'] as int;
+      final newQuantity = currentQuantity + delta;
+
+      // Step 2: Update new quantity
+      final updateResponse = await client
+          .from('cart_items')
+          .update({'quantity': newQuantity})
+          .eq('id', cartId)
+          .select();
+
+      if (updateResponse == null || updateResponse.isEmpty) {
+        throw Exception('Failed to update quantity');
+      }
+    } catch (e) {
+      throw Exception('Error updating cart quantity: $e');
     }
   }
 

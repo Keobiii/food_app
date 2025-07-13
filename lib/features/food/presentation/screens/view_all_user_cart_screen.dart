@@ -65,47 +65,59 @@ class _ViewAllUserCartScreenState extends State<ViewAllUserCartScreen> {
                 return Dismissible(
                   key: Key(cart.id!),
                   onDismissed: (direction) {
-                      context.read<CartBloc>().add(RemoveCartItemRequested(cart.id!));
-                      showSnackBar(context, "Item removed");
-                      context.read<CartBloc>().add(FetchAllUserCartRequested(userUid!));
-                    },
-                  
+                    context.read<CartBloc>().add(
+                      RemoveCartItemRequested(cart.id!, userUid!),
+                    );
+                    showSnackBar(context, "Item removed");
+                    context.read<CartBloc>().add(
+                      FetchAllUserCartRequested(userUid!),
+                    );
+                  },
                   child: Card(
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
                       leading: Image.network(food.imageCard, width: 30),
                       title: Text(food.name),
-                      subtitle: Text("\$${food.price}"),
+                      subtitle: Text("₱${food.price}"),
                       trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    
-                                  });
-                                },
-                                child: Icon(Icons.remove, color: Colors.black),
-                              ),
-                              SizedBox(width: 15),
-                              Text(
-                                cart.quantity.toString(),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              context.read<CartBloc>().add(
+                                DecreaseCartQuantity(
+                                  cartId: cart.id!,
+                                  userId: userUid!,
+                                  currentQuantity: cart.quantity,
                                 ),
-                              ),
-                              SizedBox(width: 15),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    
-                                  });
-                                },
-                                child: Icon(Icons.add, color: Colors.black),
-                              ),
-                            ],
-                          )
+                              );
+                            },
+                            child: Icon(Icons.remove, color: Colors.black),
+                          ),
+                          const SizedBox(width: 15),
+
+                          Text(
+                            cart.quantity.toString(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+
+                          GestureDetector(
+                            onTap: () {
+                              context.read<CartBloc>().add(
+                                IncreaseCartQuantity(
+                                  cartId: cart.id!,
+                                  userId: userUid!,
+                                ),
+                              );
+                            },
+                            child: Icon(Icons.add, color: Colors.black),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
