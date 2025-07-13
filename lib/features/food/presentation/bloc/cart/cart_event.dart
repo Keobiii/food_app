@@ -24,3 +24,13 @@ class FetchAllUserCartRequested extends CartEvent {
   List<Object?> get props => [userId];
 }
 
+class RemoveCartItemRequested extends CartEvent {
+  final String cartId;
+
+  RemoveCartItemRequested(this.cartId);
+
+  @override
+  List<Object?> get props => [cartId];
+}
+
+

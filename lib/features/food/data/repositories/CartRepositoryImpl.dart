@@ -1,12 +1,15 @@
 import 'package:food_app/features/food/data/datasources/CartRemoteDataSource.dart';
 import 'package:food_app/features/food/data/models/CartModel.dart';
 import 'package:food_app/features/food/domain/entities/CartEntity.dart';
+import 'package:food_app/features/food/domain/entities/CartWithFoodEntity.dart';
 import 'package:food_app/features/food/domain/repositories/CartRepository.dart';
+import 'package:food_app/features/food/domain/repositories/FoodRepository.dart';
 
 class CartRepositoryImpl implements CartRepository {
   final CartRemoveDataSource removeDataSource;
+  final FoodRepository foodRepository;
 
-  CartRepositoryImpl(this.removeDataSource);
+  CartRepositoryImpl(this.removeDataSource, this.foodRepository);
 
   @override
   Future<void> addToCart(CartEntity cart) async {
@@ -21,13 +24,20 @@ class CartRepositoryImpl implements CartRepository {
   }
   
   @override
-  Future<List<CartEntity>> fetchUserCart(String userId) async {
+  Future<List<CartWithFoodEntity>> fetchUserCartWithFood(String userId) async {
     final carts = await removeDataSource.fetchUserCart(userId);
-      return carts.map((cart) => CartEntity(
-        id: cart.id,
-        userId: userId, 
-        foodId: cart.foodId, 
-        quantity: cart.quantity
-      )).toList();
+
+    final cartWithFoods = await Future.wait(carts.map((cart) async {
+      final food = await foodRepository.getFoodById(cart.foodId);
+      return CartWithFoodEntity(cart: cart, food: food);
+    }));
+
+    return cartWithFoods;
   }
+
+  @override
+  Future<void> removeFromCart(String cartId) async {
+    await removeDataSource.removeCartItem(cartId);
+  }
+  
 }

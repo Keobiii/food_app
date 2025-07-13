@@ -34,4 +34,14 @@ class SupabaseFoodDataSource implements FoodRemoteDataSource {
     
     return (response as List).map((json) => FoodModel.fromJson(json)).toList();
   }
+
+  Future<FoodModel> getFoodById(String id) async {
+    final response = await client
+        .from('food_product')
+        .select()
+        .eq('id', id)
+        .single(); // ensures you get only one result
+
+    return FoodModel.fromJson(response);
+  }
 }

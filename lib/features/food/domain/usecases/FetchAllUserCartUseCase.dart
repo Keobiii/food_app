@@ -1,4 +1,5 @@
 import 'package:food_app/features/food/domain/entities/CartEntity.dart';
+import 'package:food_app/features/food/domain/entities/CartWithFoodEntity.dart';
 import 'package:food_app/features/food/domain/repositories/CartRepository.dart';
 
 class FetchAllUserCartUseCase {
@@ -6,7 +7,7 @@ class FetchAllUserCartUseCase {
 
   FetchAllUserCartUseCase(this.repository);
 
-  Future<List<CartEntity>> call(String userId) {
-    return repository.fetchUserCart(userId);
+  Future<List<CartWithFoodEntity>> call(String userId) {
+    return repository.fetchUserCartWithFood(userId);
   }
 }

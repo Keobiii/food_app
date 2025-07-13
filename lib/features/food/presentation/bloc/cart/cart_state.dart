@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:food_app/features/food/domain/entities/CartEntity.dart';
+import 'package:food_app/features/food/domain/entities/CartWithFoodEntity.dart';
 
 abstract class CartState extends Equatable {
   @override
@@ -29,7 +30,7 @@ class CartError extends CartState {
 }
 
 class CartLoaded extends CartState {
-  final List<CartEntity> carts;
+  final List<CartWithFoodEntity> carts;
 
   CartLoaded(this.carts);
 

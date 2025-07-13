@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_app/core/utils/widgets/snack_bar.dart';
 import 'package:food_app/di/di.dart';
 import 'package:food_app/features/auth/data/datasources/AuthLocalDataSource.dart';
 import 'package:food_app/features/food/presentation/bloc/cart/cart_bloc.dart';
@@ -42,49 +43,77 @@ class _ViewAllUserCartScreenState extends State<ViewAllUserCartScreen> {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
         if (state is CartLoading) {
-            return const Center(child: CircularProgressIndicator(),);
-          }
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (state is CartError) {
-            return Center(child: Text("Error: ${state.message}"),);
-          }
+        if (state is CartError) {
+          return Center(child: Text("Error: ${state.message}"));
+        }
 
-          if (state is CartLoaded) {
-            final carts = state.carts;
-            
+        if (state is CartLoaded) {
+          final cartItems = state.carts;
 
-            if (carts.isEmpty) {
-              return const Center(child: Text("No Products found"),);
-            }
+          return Scaffold(
+            appBar: AppBar(title: const Text("My Cart")),
+            body: ListView.builder(
+              itemCount: cartItems.length,
+              padding: const EdgeInsets.all(16),
+              itemBuilder: (context, index) {
+                final cart = cartItems[index].cart;
+                final food = cartItems[index].food;
 
-            return Scaffold(
-              appBar: AppBar(title: const Text("My Cart")),
-              body: ListView.builder(
-                itemCount: carts.length,
-                padding: const EdgeInsets.all(16),
-                itemBuilder: (context, index) {
-                  final cart = carts[index];
-
-                  return Card(
+                return Dismissible(
+                  key: Key(cart.id!),
+                  onDismissed: (direction) {
+                      context.read<CartBloc>().add(RemoveCartItemRequested(cart.id!));
+                      showSnackBar(context, "Item removed");
+                      context.read<CartBloc>().add(FetchAllUserCartRequested(userUid!));
+                    },
+                  
+                  child: Card(
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
-                      leading: Icon(Icons.fastfood, size: 30, color: Colors.red),
-                      title: Text("Food ID: ${cart.foodId}"),
-                      subtitle: Text("Quantity: ${cart.quantity}"),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.grey[700]),
-                        onPressed: () {
-                          // TODO: Add delete functionality
-                        },
-                      ),
+                      leading: Image.network(food.imageCard, width: 30),
+                      title: Text(food.name),
+                      subtitle: Text("\$${food.price}"),
+                      trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    
+                                  });
+                                },
+                                child: Icon(Icons.remove, color: Colors.black),
+                              ),
+                              SizedBox(width: 15),
+                              Text(
+                                cart.quantity.toString(),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              SizedBox(width: 15),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    
+                                  });
+                                },
+                                child: Icon(Icons.add, color: Colors.black),
+                              ),
+                            ],
+                          )
                     ),
-                  );
-                },
-              ),
-            );
+                  ),
+                );
+              },
+            ),
+          );
+        }
 
-          }
-      
         return const SizedBox.shrink();
       },
     );

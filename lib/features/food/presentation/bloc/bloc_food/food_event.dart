@@ -15,3 +15,12 @@ class FetchFoodByCategory extends FoodEvent {
 }
 
 class FetchAllFood extends FoodEvent {}
+
+class FetchFoodDetailById extends FoodEvent {
+  final String id;
+  
+  FetchFoodDetailById(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}

@@ -27,4 +27,23 @@ class SupabaseCartDataSource implements CartRemoveDataSource {
 
     return (response as List).map((json) => CartModel.fromJson(json)).toList();
   }
+
+  @override
+  Future<void> removeCartItem(String cartId) async {
+    try {
+      final response = await client
+          .from('cart_items')
+          .delete()
+          .eq('id', cartId)
+          .select();
+
+     
+      if (response == null || (response is List && response.isEmpty)) {
+        throw Exception('Cart item not found or already deleted');
+      }
+    } catch (e) {
+      throw Exception('Failed to remove item: $e');
+    }
+  }
+
 }

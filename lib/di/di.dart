@@ -23,6 +23,8 @@ import 'package:food_app/features/food/domain/usecases/FetchAllUserCartUseCase.d
 import 'package:food_app/features/food/domain/usecases/GetAllFoodsUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetCategoriesUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetFoodByCategoryUseCase.dart';
+import 'package:food_app/features/food/domain/usecases/GetFoodByIdUseCase.dart';
+import 'package:food_app/features/food/domain/usecases/RemoveCartItemUseCase.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_category/category_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/cart/cart_bloc.dart';
@@ -76,8 +78,13 @@ Future<void> init() async {
   );
 
   sl.registerLazySingleton<CartRepository>(
-    () => CartRepositoryImpl(sl())
-  );
+  () => CartRepositoryImpl(
+    sl(),
+    sl(), 
+  ),
+);
+
+
 
 
   // usecase
@@ -91,6 +98,8 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => AddToCartUseCase(sl()));
   sl.registerLazySingleton(() => FetchAllUserCartUseCase(sl()));
+  sl.registerLazySingleton(() => GetFoodByIdUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveCartItemUseCase(sl()));
 
   // bloc
   sl.registerFactory(() => AuthBloc(
@@ -105,11 +114,13 @@ Future<void> init() async {
 
   sl.registerFactory(() => FoodBloc(
     getFoodCategoryUseCase: sl(),
-    getAllFoodsUseCase: sl()
+    getAllFoodsUseCase: sl(), 
+    getFoodByIdUseCase: sl()
   ));
 
   sl.registerFactory(() => CartBloc(
     addToCartUseCase: sl(), 
-    fetchAllUserCartUseCase: sl()
+    fetchAllUserCartUseCase: sl(),
+    removeCartItemUseCase: sl()
   ));
 }

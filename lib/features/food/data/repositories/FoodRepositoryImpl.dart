@@ -41,4 +41,21 @@ final FoodRemoteDataSource remoteDataSource;
       time: model.time,
     )).toList();
   }
+  
+  @override
+  Future<FoodEntity> getFoodById(String id) async {
+    final model = await remoteDataSource.getFoodById(id);
+    return FoodEntity(
+      id: model.id,
+      name: model.name,
+      price: model.price,
+      imageCard: model.imageCard,
+      imageDetail: model.imageDetail,
+      rate: model.rate,
+      kcal: model.kcal,
+      time: model.time,
+      specialItems: model.specialItems,
+      category: model.category,
+    );
+  }
 }

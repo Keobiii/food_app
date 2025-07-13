@@ -5,4 +5,5 @@ abstract class FoodRemoteDataSource {
   Future<List<CategoryModel>> getCategories();
   Future<List<FoodModel>> getFoods(String categoryName);
   Future<List<FoodModel>> getAllFoods();
+  Future<FoodModel> getFoodById(String id);
 }
