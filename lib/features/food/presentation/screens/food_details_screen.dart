@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_app/core/utils/colors/consts.dart';
+import 'package:food_app/core/utils/widgets/snack_bar.dart';
+import 'package:food_app/di/di.dart';
+import 'package:food_app/features/auth/data/datasources/AuthLocalDataSource.dart';
+import 'package:food_app/features/food/domain/entities/CartEntity.dart';
 import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
+import 'package:food_app/features/food/presentation/bloc/cart/cart_bloc.dart';
+import 'package:food_app/features/food/presentation/bloc/cart/cart_event.dart';
+import 'package:food_app/features/food/presentation/bloc/cart/cart_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:readmore/readmore.dart';
 
@@ -14,6 +22,29 @@ class FoodDetailsScreen extends StatefulWidget {
 
 class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
   int quantity = 1;
+
+  String? userUid;
+
+  @override
+  void initState() {
+    super.initState();
+    checkUserId();
+  }
+
+  void checkUserId() async {
+    final uid = await sl<AuthLocalDatasource>().getCachedUserId();
+
+    setState(() {
+      userUid = uid;
+    });
+
+    if (userUid != null) {
+      debugPrint("Cached UID: $userUid");
+    } else {
+      debugPrint("No user is cached.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -154,8 +185,14 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      foodInfo("assets/food-delivery/icon/star.png", "${widget.food.rate}/5"),
-                      foodInfo("assets/food-delivery/icon/fire.png", "${widget.food.kcal}Kcal"),
+                      foodInfo(
+                        "assets/food-delivery/icon/star.png",
+                        "${widget.food.rate}/5",
+                      ),
+                      foodInfo(
+                        "assets/food-delivery/icon/fire.png",
+                        "${widget.food.kcal}Kcal",
+                      ),
                       foodInfo(
                         "assets/food-delivery/icon/time.png",
                         "${widget.food.time}",
@@ -188,31 +225,55 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Transform.translate(
-        offset: Offset(0, -20),
-        child: FloatingActionButton.extended(
-          onPressed: () {},
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          label: MaterialButton(
+      floatingActionButton: BlocListener<CartBloc, CartState>(
+        listener: (context, state) {
+          if (state is CartAddedSucces) {
+            showSnackBar(context, "Item Added Successfully");
+          } else if (state is CartError) {
+            showSnackBar(context, "Item failed to add");
+          }
+        },
+        child: Transform.translate(
+          offset: Offset(0, -20),
+          child: FloatingActionButton.extended(
             onPressed: () {},
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40),
-            ),
-            height: 65,
-            color: red,
-            minWidth: 350,
-            child: Text(
-              "Add to Cart",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                letterSpacing: 1.3,
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            label: MaterialButton(
+              onPressed: () {
+                if (userUid == null) {
+                  showSnackBar(context, "Please Login First");
+                } else {
+                  final cart = CartEntity(
+                    userId: userUid!,
+                    foodId: widget.food.id,
+                    quantity: quantity,
+                  );
+
+                 
+                  debugPrint("Adding to cart: userId=${userUid!}, foodId=${widget.food.id}, qty=$quantity");
+                  context.read<CartBloc>().add(AddToCartRequested(cart));
+                }
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(40),
+              ),
+              height: 65,
+              color: red,
+              minWidth: 350,
+              child: Text(
+                "Add to Cart",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  letterSpacing: 1.3,
+                ),
               ),
             ),
           ),
         ),
       ),
+    
     );
   }
 

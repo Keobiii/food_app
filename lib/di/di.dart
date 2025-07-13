@@ -8,17 +8,23 @@ import 'package:food_app/features/auth/domain/usecases/LoginUseCase.dart';
 import 'package:food_app/features/auth/domain/usecases/LogoutUseCase.dart';
 import 'package:food_app/features/auth/domain/usecases/RegisterUseCase.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:food_app/features/food/data/datasources/CartRemoteDataSource.dart';
 import 'package:food_app/features/food/data/datasources/FoodRemoteDataSource.dart';
+import 'package:food_app/features/food/data/datasources/SupabaseCartDataSource.dart';
 import 'package:food_app/features/food/data/datasources/SupabaseFoodDataSource.dart';
+import 'package:food_app/features/food/data/repositories/CartRepositoryImpl.dart';
 import 'package:food_app/features/food/data/repositories/CategoryRepositoryImpl%20.dart';
 import 'package:food_app/features/food/data/repositories/FoodRepositoryImpl.dart';
+import 'package:food_app/features/food/domain/repositories/CartRepository.dart';
 import 'package:food_app/features/food/domain/repositories/CategoryRepository.dart';
 import 'package:food_app/features/food/domain/repositories/FoodRepository.dart';
+import 'package:food_app/features/food/domain/usecases/AddToCartUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetAllFoodsUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetCategoriesUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetFoodByCategoryUseCase.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_category/category_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
+import 'package:food_app/features/food/presentation/bloc/cart/cart_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -46,6 +52,10 @@ Future<void> init() async {
     () => SupabaseFoodDataSource(sl())
   );
 
+  sl.registerLazySingleton<CartRemoveDataSource>(
+    () => SupabaseCartDataSource(sl())
+  );
+
 
 
 
@@ -64,6 +74,11 @@ Future<void> init() async {
     () => FoodRepositoryImpl(sl())
   );
 
+  sl.registerLazySingleton<CartRepository>(
+    () => CartRepositoryImpl(sl())
+  );
+
+
   // usecase
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
@@ -72,6 +87,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetCategoriesUseCase(sl()));
   sl.registerLazySingleton(() => GetFoodByCategoryUseCase(sl()));
   sl.registerLazySingleton(() => GetAllFoodsUseCase(sl()));
+
+  sl.registerLazySingleton(() => AddToCartUseCase(sl()));
 
   // bloc
   sl.registerFactory(() => AuthBloc(
@@ -87,5 +104,9 @@ Future<void> init() async {
   sl.registerFactory(() => FoodBloc(
     getFoodCategoryUseCase: sl(),
     getAllFoodsUseCase: sl()
+  ));
+
+  sl.registerFactory(() => CartBloc(
+    addToCartUseCase: sl()
   ));
 }
