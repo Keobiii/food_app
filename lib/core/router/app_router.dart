@@ -12,7 +12,7 @@ import 'package:food_app/features/food/presentation/screens/view_all_products_sc
 import 'package:food_app/features/food/presentation/screens/view_all_user_cart_screen.dart';
 import 'package:food_app/features/home/app_main_screen.dart';
 import 'package:food_app/features/onboading/onboarding_screen.dart';
-import 'package:food_app/features/profile/profile_screen.dart';
+import 'package:food_app/features/profile/presentation/screen/profile_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -92,9 +92,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/profile',
           name: 'profile',
-          pageBuilder:
-              (context, state) =>
-                  const NoTransitionPage(child: ProfileScreen()),
+          pageBuilder: (context, state) => fadeTransition(ProfileScreen(), state),
         ),
 
         GoRoute(
@@ -108,3 +106,13 @@ final GoRouter router = GoRouter(
     ),
   ],
 );
+
+CustomTransitionPage fadeTransition(Widget child, GoRouterState state) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
+}

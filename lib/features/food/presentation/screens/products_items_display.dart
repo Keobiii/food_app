@@ -15,7 +15,8 @@ class _ProductsItemsDisplayState extends State<ProductsItemsDisplay> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
-      onTap: () {
+      onTap: () async{
+        await Future.delayed(const Duration(milliseconds: 300));
         context.push('/foodDetails', extra: widget.foodEntity);
       },
       child: Stack(
