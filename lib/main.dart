@@ -6,6 +6,7 @@ import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_category/category_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_bloc.dart';
+import 'package:food_app/features/profile/presentation/bloc/bloc_profile/profile_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -27,7 +28,8 @@ void main() async {
         BlocProvider(create: (_) => di.sl<AuthBloc>()),
         BlocProvider(create: (_) => di.sl<CategoryBloc>()),
         BlocProvider(create: (_) => di.sl<FoodBloc>()),
-        BlocProvider(create: (_) => di.sl<CartBloc>())
+        BlocProvider(create: (_) => di.sl<CartBloc>()),
+        BlocProvider(create: (_) => di.sl<ProfileBloc>()),
       ],
       child: App(),
     ),

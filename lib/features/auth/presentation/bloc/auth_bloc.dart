@@ -34,7 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onRegisterRequested(RegisterRequested event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      final user = await registerUseCase(event.email, event.password);
+      final user = await registerUseCase(event.user, event.password);
       emit(AuthSuccess(user));
     } catch (e) {
       emit(AuthFailure(e.toString()));

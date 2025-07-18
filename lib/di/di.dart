@@ -29,6 +29,12 @@ import 'package:food_app/features/food/domain/usecases/UpdateCartQuantityUseCase
 import 'package:food_app/features/food/presentation/bloc/bloc_category/category_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_bloc.dart';
+import 'package:food_app/features/profile/data/datasources/ProfileRemoteDatasource.dart';
+import 'package:food_app/features/profile/data/datasources/SupabaseProfileDataSource.dart';
+import 'package:food_app/features/profile/data/repositories/ProfileRepositoryImpl.dart';
+import 'package:food_app/features/profile/domain/repositories/ProfileRepository.dart';
+import 'package:food_app/features/profile/domain/usecases/GetUserByIdUseCase.dart';
+import 'package:food_app/features/profile/presentation/bloc/bloc_profile/profile_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -59,6 +65,10 @@ Future<void> init() async {
   sl.registerLazySingleton<CartRemoveDataSource>(
     () => SupabaseCartDataSource(sl())
   );
+  
+  sl.registerLazySingleton<ProfileRemoteDataSource>(
+    () => SupabaseProfileDataSource(sl())
+  );
 
 
 
@@ -79,29 +89,41 @@ Future<void> init() async {
   );
 
   sl.registerLazySingleton<CartRepository>(
-  () => CartRepositoryImpl(
-    sl(),
-    sl(), 
-  ),
-);
+    () => CartRepositoryImpl(
+      sl(),
+      sl(), 
+    ),
+  );
+
+  sl.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(sl()),
+  );
 
 
 
 
   // usecase
+
+  // auth usecase
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
 
+  // category usecase
   sl.registerLazySingleton(() => GetCategoriesUseCase(sl()));
   sl.registerLazySingleton(() => GetFoodByCategoryUseCase(sl()));
   sl.registerLazySingleton(() => GetAllFoodsUseCase(sl()));
 
+  // food usecase
   sl.registerLazySingleton(() => AddToCartUseCase(sl()));
   sl.registerLazySingleton(() => FetchAllUserCartUseCase(sl()));
   sl.registerLazySingleton(() => GetFoodByIdUseCase(sl()));
   sl.registerLazySingleton(() => RemoveCartItemUseCase(sl()));
   sl.registerLazySingleton(() => UpdateCartQuantityUseCase(sl()));
+
+  // profile usecase
+  sl.registerLazySingleton(() => GetUserByIdUseCase(sl()));
+
 
   // bloc
   sl.registerFactory(() => AuthBloc(
@@ -125,5 +147,9 @@ Future<void> init() async {
     fetchAllUserCartUseCase: sl(),
     removeCartItemUseCase: sl(), 
     updateCartQuantityUseCase: sl()
+  ));
+
+  sl.registerFactory(() => ProfileBloc(
+    getUserByIdUseCase: sl()
   ));
 }
