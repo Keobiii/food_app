@@ -28,7 +28,7 @@ import 'package:food_app/features/food/domain/usecases/RemoveCartItemUseCase.dar
 import 'package:food_app/features/food/domain/usecases/UpdateCartQuantityUseCase.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_category/category_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
-import 'package:food_app/features/food/presentation/bloc/cart/cart_bloc.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

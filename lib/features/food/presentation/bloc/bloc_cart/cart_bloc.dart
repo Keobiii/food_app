@@ -4,8 +4,8 @@ import 'package:food_app/features/food/domain/usecases/AddToCartUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/FetchAllUserCartUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/RemoveCartItemUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/UpdateCartQuantityUseCase.dart';
-import 'package:food_app/features/food/presentation/bloc/cart/cart_event.dart';
-import 'package:food_app/features/food/presentation/bloc/cart/cart_state.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_event.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   final AddToCartUseCase addToCartUseCase;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_app/core/utils/colors/consts.dart';
+import 'package:food_app/core/utils/widgets/snack_bar.dart';
 import 'package:food_app/features/food/domain/entities/CategoryEntity.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_category/category_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_category/category_event.dart';
@@ -8,6 +9,8 @@ import 'package:food_app/features/food/presentation/bloc/bloc_category/category_
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_event.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_state.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_bloc.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_state.dart';
 import 'package:food_app/features/food/presentation/screens/products_items_display.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,30 +36,42 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _appBanner(),
-                  SizedBox(height: 25),
-                  Text(
-                    "Categories",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
+      body: BlocListener<CartBloc, CartState>(
+        listener: (context, state) {
+          if (state is CartAddedSucces) {
+            showSnackBar(context, "Item Added Successfully");
+          } else if (state is CartError) {
+            showSnackBar(context, "Item failed to add");
+          }
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _appBanner(),
+                    SizedBox(height: 25),
+                    Text(
+                      "Categories",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            _buildCategoryList(),
-            SizedBox(height: 30),
-            _viewAll(),
-            SizedBox(height: 30),
-            _buildProductSection(),
-          ],
+              _buildCategoryList(),
+              SizedBox(height: 30),
+              _viewAll(),
+              SizedBox(height: 30),
+              _buildProductSection(),
+            ],
+          ),
         ),
       ),
     );
@@ -117,7 +132,7 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
           ),
           GestureDetector(
             onTap: () {
-              context.push('/viewAllProduct');
+              context.push('/search');
             },
             child: Row(
               children: [

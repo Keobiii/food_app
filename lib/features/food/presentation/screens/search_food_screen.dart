@@ -1,22 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_app/core/utils/widgets/snack_bar.dart';
 import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_bloc.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_event.dart';
 import 'package:food_app/features/food/presentation/bloc/bloc_food/food_state.dart';
-import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_bloc.dart';
-import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_state.dart';
 import 'package:food_app/features/food/presentation/screens/products_items_display.dart';
 
-class ViewAllProductsScreen extends StatefulWidget {
-  const ViewAllProductsScreen({super.key});
+class SearchFoodScreen extends StatefulWidget {
+  const SearchFoodScreen({super.key});
 
   @override
-  State<ViewAllProductsScreen> createState() => _ViewAllProductsScreenState();
+  State<SearchFoodScreen> createState() => _SearchFoodScreenState();
 }
 
-class _ViewAllProductsScreenState extends State<ViewAllProductsScreen> {
+class _SearchFoodScreenState extends State<SearchFoodScreen> {
   List<FoodEntity> products = [];
 
   @override

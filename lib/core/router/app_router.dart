@@ -8,6 +8,7 @@ import 'package:food_app/features/food/data/models/FoodModel.dart';
 import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
 import 'package:food_app/features/food/presentation/screens/food_app_home_screen.dart';
 import 'package:food_app/features/food/presentation/screens/food_details_screen.dart';
+import 'package:food_app/features/food/presentation/screens/search_food_screen.dart';
 import 'package:food_app/features/food/presentation/screens/view_all_products_screen.dart';
 import 'package:food_app/features/food/presentation/screens/view_all_user_cart_screen.dart';
 import 'package:food_app/features/home/app_main_screen.dart';
@@ -81,12 +82,9 @@ final GoRouter router = GoRouter(
         ),
 
         GoRoute(
-          path: '/wishlist',
-          name: 'wishlist',
-          pageBuilder:
-              (context, state) => const NoTransitionPage(
-                child: Scaffold(body: Center(child: Text('Favorite'))),
-              ),
+          path: '/search',
+          name: 'search',
+          pageBuilder: (context, state) => fadeTransition(SearchFoodScreen(), state)
         ),
 
         GoRoute(

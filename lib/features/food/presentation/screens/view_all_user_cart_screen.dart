@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_app/core/utils/widgets/snack_bar.dart';
 import 'package:food_app/di/di.dart';
 import 'package:food_app/features/auth/data/datasources/AuthLocalDataSource.dart';
-import 'package:food_app/features/food/presentation/bloc/cart/cart_bloc.dart';
-import 'package:food_app/features/food/presentation/bloc/cart/cart_event.dart';
-import 'package:food_app/features/food/presentation/bloc/cart/cart_state.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_bloc.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_event.dart';
+import 'package:food_app/features/food/presentation/bloc/bloc_cart/cart_state.dart';
 
 class ViewAllUserCartScreen extends StatefulWidget {
   const ViewAllUserCartScreen({super.key});
