@@ -24,3 +24,14 @@ class UpdateUserDetails extends ProfileEvent {
   @override
   List<Object?> get props => [uid, firstName, lastName];
 }
+
+class UpdatePassword extends ProfileEvent {
+  final String userId;
+  final String oldPassword;
+  final String newPassword;
+
+  UpdatePassword(this.userId, this.oldPassword, this.newPassword);
+
+  @override
+  List<Object?> get props => [userId, oldPassword, newPassword];
+}

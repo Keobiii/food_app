@@ -22,4 +22,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<void> updateProfile(String userId, String firstName, String lastName) {
     return remoteDataSource.updateProfile(userId, firstName, lastName);
   }
+  
+  @override
+  Future<void> changePassword(String oldPassword, String newPassword) {
+    return remoteDataSource.changePassword(oldPassword, newPassword);
+  }
 }

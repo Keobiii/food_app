@@ -16,6 +16,7 @@ import 'package:food_app/features/home/app_main_screen.dart';
 import 'package:food_app/features/onboading/onboarding_screen.dart';
 import 'package:food_app/features/profile/presentation/screen/profile_screen.dart';
 import 'package:food_app/features/profile/presentation/screen/update_details_screen.dart';
+import 'package:food_app/features/profile/presentation/screen/update_password_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -105,6 +106,12 @@ final GoRouter router = GoRouter(
           path: '/updateDetails',
           name: 'updateDetails',
           pageBuilder: (context, state) => fadeTransition(UpdateDetailsScreen(), state),
+        ),
+
+        GoRoute(
+          path: '/updatePassword',
+          name: 'updatePassword',
+          pageBuilder: (context, state) => fadeTransition(UpdatePasswordScreen(), state),
         ),
 
         GoRoute(

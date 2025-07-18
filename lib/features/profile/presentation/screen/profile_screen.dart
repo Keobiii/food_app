@@ -176,10 +176,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: 15),
                   ProfileSettingList(
                     imagePath: "assets/food-delivery/pizza.png",
-                    title: "Orders",
-                    subtitle: "View your orders",
+                    title: "Password",
+                    subtitle: "Update your password",
                     onTap: () {
-                      context.push('/viewAllProduct');
+                      context.push("/updatePassword");
                     },
                   ),
                   SizedBox(height: 15),

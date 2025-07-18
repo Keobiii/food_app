@@ -30,3 +30,11 @@ class ProfileError extends ProfileState {
 
 class ProfileUpdateSuccess extends ProfileState {
 }
+
+class UpdatePasswordFailure extends ProfileState {
+  final String message;
+  UpdatePasswordFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

@@ -9,19 +9,17 @@ import 'package:food_app/features/profile/presentation/bloc/bloc_profile/profile
 import 'package:food_app/features/profile/presentation/bloc/bloc_profile/profile_state.dart';
 import 'package:go_router/go_router.dart';
 
-class UpdateDetailsScreen extends StatefulWidget {
-  const UpdateDetailsScreen({super.key});
+class UpdatePasswordScreen extends StatefulWidget {
+  const UpdatePasswordScreen({super.key});
 
   @override
-  State<UpdateDetailsScreen> createState() => _UpdateDetailsScreenState();
+  State<UpdatePasswordScreen> createState() => _UpdatePasswordScreenState();
 }
 
-class _UpdateDetailsScreenState extends State<UpdateDetailsScreen> {
+class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   // Controllers
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
   String? userUid;
@@ -54,44 +52,39 @@ class _UpdateDetailsScreenState extends State<UpdateDetailsScreen> {
         listener: (context, state) {
           if (state is ProfileError) {
             showSnackBar(context, state.message);
-            debugPrint("Error: ${state.message}");
+          } else if (state is UpdatePasswordFailure) {
+            showSnackBar(context, state.message); 
           } else if (state is ProfileUpdateSuccess) {
-            showSnackBar(context, "Profile updated successfully");
+            showSnackBar(context, "Password updated successfully");
+            oldPasswordController.clear();
+            newPasswordController.clear();
+            confirmPasswordController.clear();
             context.pop();
-          } else if (state is ProfileLoaded) {
-            // Set values to the text controllers
-            final user = state.user;
-
-            firstNameController.text = user.firstName;
-            lastNameController.text = user.lastName;
-            emailController.text = user.email;
-
-            debugPrint("User data loaded: ${user.firstName} ${user.lastName} ${user.email}");
-          }
+          } 
         },
         child: Center(
           child: Column(
             children: [
               TextField(
-                controller: lastNameController,
+                controller: oldPasswordController,
                 decoration: InputDecoration(
-                  labelText: "First Name",
+                  labelText: "Current Password",
                   border: OutlineInputBorder(),
                 ),
               ),
               SizedBox(height: 20),
               TextField(
-                controller: firstNameController,
+                controller: newPasswordController,
                 decoration: InputDecoration(
-                  labelText: "Last Name",
+                  labelText: "New Password",
                   border: OutlineInputBorder(),
                 ),
               ),
               SizedBox(height: 20),
               TextField(
-                controller: emailController,
+                controller: confirmPasswordController,
                 decoration: InputDecoration(
-                  labelText: "Email",
+                  labelText: "Confirm New Password",
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -106,24 +99,29 @@ class _UpdateDetailsScreenState extends State<UpdateDetailsScreen> {
                     width: double.infinity,
                     child: Button(
                       onTap: () {
-                        String email = emailController.text.trim();
-                        String firstName = firstNameController.text.trim();
-                        String lastName = lastNameController.text.trim();
+                        String oldPassword = oldPasswordController.text.trim();
+                        String newPassword = newPasswordController.text.trim();
+                        String confimPassword = confirmPasswordController.text.trim();
 
-                        if (email.isEmpty ||
-                            firstName.isEmpty ||
-                            lastName.isEmpty) {
+                        if (userUid == null) {
+                          showSnackBar(context, "Please login to update your password");
+                          return;
+                        }
+
+                        if (oldPassword.isEmpty ||
+                            newPassword.isEmpty ||
+                            confimPassword.isEmpty) {
                           showSnackBar(context, "All fields are required");
                           return;
                         }
 
-                        if (!email.contains(".com")) {
-                          showSnackBar(context, "Invalid Email");
+                        if (newPassword != confimPassword) {
+                          showSnackBar(context, "Passwords do not match");
                           return;
                         }
 
                         context.read<ProfileBloc>().add(
-                          UpdateUserDetails(userUid!, firstName, lastName),
+                          UpdatePassword(userUid!, oldPassword, confimPassword),
                         );
                       },
                       buttonText: "Update",
@@ -138,3 +136,4 @@ class _UpdateDetailsScreenState extends State<UpdateDetailsScreen> {
     );
   }
 }
+
