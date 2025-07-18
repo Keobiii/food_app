@@ -19,7 +19,7 @@ class AppMainScreen extends StatefulWidget {
 
 class _AppMainScreenState extends State<AppMainScreen> {
   int _currentIndex = 0;
-  final tabs = ['/home', '/search', '/profile', '/cart'];
+  final tabs = ['/home', '/search', '/cart', '/cart', '/profile'];
 
   String? userUid;
   int cartItemCount = 0;
@@ -61,64 +61,105 @@ class _AppMainScreenState extends State<AppMainScreen> {
       bottomNavigationBar:
           shouldHideBottomNav
               ? null
-              : Container(
-                height: 60,
-                decoration: BoxDecoration(color: Colors.white),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildNavItems(Iconsax.home_15, "A", 0),
-                    SizedBox(width: 10),
-                    _buildNavItems(CupertinoIcons.search, "B", 1),
-                    SizedBox(width: 10),
-                    _buildNavItems(Icons.person_outline, "C", 2),
-                    SizedBox(width: 10),
-                    Stack(
+              : Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: 60,
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildNavItems(Iconsax.home_15, "A", 0),
+                        _buildNavItems(CupertinoIcons.search, "B", 1),
+                        SizedBox(width: 60),
+                        _buildNavItems(Iconsax.message, "C", 2),
+                        _buildNavItems(
+                          Iconsax.profile_2user,
+                          "Profile",
+                          4,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Positioned(
+                    bottom: 30,
+                    left: MediaQuery.of(context).size.width / 2 - 35,
+                    child: Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        _buildNavItems(Iconsax.shopping_cart, "D", 3),
-                        BlocListener<CartBloc, CartState>(
-                          listener: (context, state) {
-                            if (state is CartLoaded) {
-                              setState(() {
-                                cartItemCount = state.carts.length;
-                              });
-                            }
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _currentIndex = 3;
+                            });
+                            context.go(tabs[3]);
                           },
-                          child: Positioned(
-                            right: -7,
-                            top: 5,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.red,
-                              radius: 10,
-                              child: Text(
-                                "${cartItemCount}",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.redAccent,
+                            radius: 35,
+                            child: SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Center(
+                                    child: Icon(
+                                      Iconsax.shopping_cart,
+                                      size: 28,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: -5,
+                                    right: -5,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.white
+                                      ),
+                                      constraints: BoxConstraints(
+                                        minWidth: 20,
+                                        minHeight: 20,
+                                      ),
+                                      child: BlocListener<
+                                        CartBloc,
+                                        CartState
+                                      >(
+                                        listener: (context, state) {
+                                         if (state is CartLoaded) {
+                                            setState(() {
+                                              cartItemCount = state.carts.length;
+                                            });
+                                          }
+                                        },
+                                        child: Text(
+                                          '${cartItemCount}',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                        
-                        // Positioned(
-                        //   right: 135,
-                        //   top: -25,
-                        //   child: CircleAvatar(
-                        //     backgroundColor: Colors.red,
-                        //     radius: 30,
-                        //     child: Icon(
-                        //       CupertinoIcons.search,
-                        //       size: 30,
-                        //       color: Colors.white,
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
     );
   }

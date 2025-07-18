@@ -134,24 +134,8 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
             onTap: () {
               context.push('/search');
             },
-            child: Row(
-              children: [
-                Text("View All", style: TextStyle(color: Colors.orange)),
-                SizedBox(width: 5),
-                Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: Colors.white,
-                    size: 10,
-                  ),
-                ),
-              ],
-            ),
+            child: Text("View All", style: TextStyle(color: Colors.grey[500])),
+            
           ),
         ],
       ),
@@ -327,18 +311,20 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
       backgroundColor: Colors.white,
       centerTitle: true,
       actions: [
+        // SizedBox(width: 25),
+        // Container(
+        //   height: 45,
+        //   width: 45,
+        //   padding: EdgeInsets.all(10),
+        //   decoration: BoxDecoration(
+        //     color: grey1,
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        //   child: Image.asset("assets/food-delivery/icon/dash.png"),
+        // ),
+        // Spacer(),
+        
         SizedBox(width: 25),
-        Container(
-          height: 45,
-          width: 45,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: grey1,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Image.asset("assets/food-delivery/icon/dash.png"),
-        ),
-        Spacer(),
         Row(
           children: [
             Icon(Icons.location_on_outlined, size: 18, color: Colors.red),
