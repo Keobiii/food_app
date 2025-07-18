@@ -20,5 +20,23 @@ class SupabaseProfileDataSource implements ProfileRemoteDataSource {
     return UserModel.fromJson(response);
   }
 
+  Future<void> updateProfile(String uid, String firstName, String lastName) async {
+    if (uid == null) throw Exception("User not logged in");
+
+    try {
+      await client
+          .from('users')
+          .update({
+            'first_name': firstName,
+            'last_name': lastName,
+            'updated_at': DateTime.now().toIso8601String(),
+          })
+          .eq('id', uid);
+    } catch (e) {
+      throw Exception("Failed to update user: $e");
+    }
+  }
+
+
 
 }

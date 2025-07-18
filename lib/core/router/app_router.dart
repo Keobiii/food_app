@@ -15,6 +15,7 @@ import 'package:food_app/features/food/presentation/screens/view_all_user_cart_s
 import 'package:food_app/features/home/app_main_screen.dart';
 import 'package:food_app/features/onboading/onboarding_screen.dart';
 import 'package:food_app/features/profile/presentation/screen/profile_screen.dart';
+import 'package:food_app/features/profile/presentation/screen/update_details_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -98,6 +99,12 @@ final GoRouter router = GoRouter(
           path: '/profile',
           name: 'profile',
           pageBuilder: (context, state) => fadeTransition(ProfileScreen(), state),
+        ),
+
+        GoRoute(
+          path: '/updateDetails',
+          name: 'updateDetails',
+          pageBuilder: (context, state) => fadeTransition(UpdateDetailsScreen(), state),
         ),
 
         GoRoute(

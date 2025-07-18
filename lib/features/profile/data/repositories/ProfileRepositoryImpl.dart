@@ -17,4 +17,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
       lastName: userModel.lastName,
     );
   }
+  
+  @override
+  Future<void> updateProfile(String userId, String firstName, String lastName) {
+    return remoteDataSource.updateProfile(userId, firstName, lastName);
+  }
 }

@@ -34,6 +34,7 @@ import 'package:food_app/features/profile/data/datasources/SupabaseProfileDataSo
 import 'package:food_app/features/profile/data/repositories/ProfileRepositoryImpl.dart';
 import 'package:food_app/features/profile/domain/repositories/ProfileRepository.dart';
 import 'package:food_app/features/profile/domain/usecases/GetUserByIdUseCase.dart';
+import 'package:food_app/features/profile/domain/usecases/UpdateUserUseCase.dart';
 import 'package:food_app/features/profile/presentation/bloc/bloc_profile/profile_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -123,6 +124,7 @@ Future<void> init() async {
 
   // profile usecase
   sl.registerLazySingleton(() => GetUserByIdUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserUseCase(sl()));
 
 
   // bloc
@@ -150,6 +152,7 @@ Future<void> init() async {
   ));
 
   sl.registerFactory(() => ProfileBloc(
-    getUserByIdUseCase: sl()
+    getUserByIdUseCase: sl(),
+    updateUserUseCase: sl()
   ));
 }

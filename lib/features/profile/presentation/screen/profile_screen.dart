@@ -169,7 +169,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     imagePath: "assets/food-delivery/burger.png",
                     title: "Profile",
                     subtitle: "View and edit your profile",
-                    onTap: () {},
+                    onTap: () {
+                      context.push("/updateDetails");
+                    },
                   ),
                   SizedBox(height: 15),
                   ProfileSettingList(
