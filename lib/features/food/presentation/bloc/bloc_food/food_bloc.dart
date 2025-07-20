@@ -37,7 +37,7 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
     emit(FoodLoading());
     try {
       final allFoods = await getAllFoodsUseCase();
-      emit(FoodLoaded(allFoods, allFoods)); // both are the same
+      emit(FoodLoaded(allFoods, allFoods)); 
     } catch (e) {
       emit(FoodError(e.toString()));
     }

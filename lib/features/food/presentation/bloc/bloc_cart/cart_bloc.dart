@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_app/features/food/domain/entities/CartWithFoodEntity.dart';
 import 'package:food_app/features/food/domain/usecases/AddToCartUseCase.dart';
+import 'package:food_app/features/food/domain/usecases/ClearAllCartUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/FetchAllUserCartUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/RemoveCartItemUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/UpdateCartQuantityUseCase.dart';
@@ -12,18 +13,21 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final FetchAllUserCartUseCase fetchAllUserCartUseCase;
   final RemoveCartItemUseCase removeCartItemUseCase;
   final UpdateCartQuantityUseCase updateCartQuantityUseCase;
+  final ClearCartUseCase clearCartUseCase;
 
   CartBloc({
     required this.addToCartUseCase,
     required this.fetchAllUserCartUseCase,
     required this.removeCartItemUseCase,
     required this.updateCartQuantityUseCase,
+    required this.clearCartUseCase,
   }) : super(CartInitial()) {
     on<AddToCartRequested>(_onAddToCartRequested);
     on<FetchAllUserCartRequested>(_onFetchAllUserCartRequested);
     on<RemoveCartItemRequested>(_onRemoveCartItemRequested);
     on<IncreaseCartQuantity>(_onIncreaseCartQuantity);
     on<DecreaseCartQuantity>(_onDecreaseCartQuantity);
+    on<ClearUserCartRequested>(_onClearUserCartRequested);
   }
 
   Future<void> _onAddToCartRequested(
@@ -108,6 +112,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       add(FetchAllUserCartRequested(event.userId));
     } catch (e) {
       emit(CartError('Failed to decrease quantity'));
+    }
+  }
+
+  Future<void> _onClearUserCartRequested(ClearUserCartRequested event, Emitter<CartState> emit) async {
+    emit(CartLoading());
+    try {
+      await clearCartUseCase(event.userId);
+      // emit(CartCheckOutSuccess("Checkout successful! Your cart has been cleared."));
+      emit(CartLoaded([]));
+    } catch (e) {
+      emit(CartError(e.toString()));
     }
   }
 }

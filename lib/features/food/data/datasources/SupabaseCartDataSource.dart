@@ -28,7 +28,9 @@ class SupabaseCartDataSource implements CartRemoveDataSource {
         .select()
         .eq("user_id", userId);
 
-    return (response as List).map((json) => CartModel.fromJson(json)).toList();
+    return (response as List<dynamic>)
+      .map((json) => CartModel.fromJson(json as Map<String, dynamic>))
+      .toList();
   }
 
   @override

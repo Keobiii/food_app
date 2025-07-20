@@ -52,3 +52,12 @@ class DecreaseCartQuantity extends CartEvent {
     required this.currentQuantity,
   });
 }
+
+class ClearUserCartRequested extends CartEvent {
+  final String userId;
+
+  ClearUserCartRequested(this.userId);
+
+   @override
+  List<Object?> get props => [userId];
+}

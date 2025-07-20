@@ -19,6 +19,7 @@ import 'package:food_app/features/food/domain/repositories/CartRepository.dart';
 import 'package:food_app/features/food/domain/repositories/CategoryRepository.dart';
 import 'package:food_app/features/food/domain/repositories/FoodRepository.dart';
 import 'package:food_app/features/food/domain/usecases/AddToCartUseCase.dart';
+import 'package:food_app/features/food/domain/usecases/ClearAllCartUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/FetchAllUserCartUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetAllFoodsUseCase.dart';
 import 'package:food_app/features/food/domain/usecases/GetCategoriesUseCase.dart';
@@ -127,6 +128,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetUserByIdUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserUseCase(sl()));
   sl.registerLazySingleton(() => UpdatePasswordUseCase(sl()));
+  sl.registerLazySingleton(() => ClearCartUseCase(sl()));
 
 
   // bloc
@@ -150,7 +152,8 @@ Future<void> init() async {
     addToCartUseCase: sl(), 
     fetchAllUserCartUseCase: sl(),
     removeCartItemUseCase: sl(), 
-    updateCartQuantityUseCase: sl()
+    updateCartQuantityUseCase: sl(),
+    clearCartUseCase: sl()
   ));
 
   sl.registerFactory(() => ProfileBloc(

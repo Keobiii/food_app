@@ -27,10 +27,12 @@ class CartRepositoryImpl implements CartRepository {
   Future<List<CartWithFoodEntity>> fetchUserCartWithFood(String userId) async {
     final carts = await removeDataSource.fetchUserCart(userId);
 
-    final cartWithFoods = await Future.wait(carts.map((cart) async {
-      final food = await foodRepository.getFoodById(cart.foodId);
-      return CartWithFoodEntity(cart: cart, food: food);
-    }));
+    final cartWithFoods = await Future.wait(
+      carts.map((cart) async {
+        final food = await foodRepository.getFoodById(cart.foodId);
+        return CartWithFoodEntity(cart: cart, food: food);
+      }).toList(),
+    );
 
     return cartWithFoods;
   }
@@ -45,5 +47,12 @@ class CartRepositoryImpl implements CartRepository {
     return removeDataSource.updateCartQuantity(cartId, delta);
   }
 
+  @override
+  Future<void> clearAllCart(String userId) async {
+    final carts = await removeDataSource.fetchUserCart(userId);
+    for (final item in carts) {
+      await removeDataSource.removeCartItem(item.id!);
+    }
+  }
   
 }
