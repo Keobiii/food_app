@@ -7,6 +7,7 @@ import 'package:food_app/features/auth/data/datasources/AuthLocalDataSource.dart
 import 'package:food_app/features/profile/presentation/bloc/bloc_profile/profile_bloc.dart';
 import 'package:food_app/features/profile/presentation/bloc/bloc_profile/profile_event.dart';
 import 'package:food_app/features/profile/presentation/bloc/bloc_profile/profile_state.dart';
+import 'package:food_app/features/profile/presentation/utils/profileAppBar.dart';
 import 'package:go_router/go_router.dart';
 
 class UpdateDetailsScreen extends StatefulWidget {
@@ -49,92 +50,122 @@ class _UpdateDetailsScreenState extends State<UpdateDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocListener<ProfileBloc, ProfileState>(
-        listener: (context, state) {
-          if (state is ProfileError) {
-            showSnackBar(context, state.message);
-            debugPrint("Error: ${state.message}");
-          } else if (state is ProfileUpdateSuccess) {
-            showSnackBar(context, "Profile updated successfully");
-            context.pop();
-          } else if (state is ProfileLoaded) {
-            // Set values to the text controllers
-            final user = state.user;
-
-            firstNameController.text = user.firstName;
-            lastNameController.text = user.lastName;
-            emailController.text = user.email;
-
-            debugPrint("User data loaded: ${user.firstName} ${user.lastName} ${user.email}");
-          }
-        },
-        child: Center(
-          child: Column(
-            children: [
-              TextField(
-                controller: lastNameController,
-                decoration: InputDecoration(
-                  labelText: "First Name",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: firstNameController,
-                decoration: InputDecoration(
-                  labelText: "Last Name",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 20),
-              BlocBuilder<ProfileBloc, ProfileState>(
-                builder: (context, state) {
-                  if (state is ProfileLoading) {
-                    return const CircularProgressIndicator();
-                  }
-
-                  return SizedBox(
+    return SafeArea(
+      child: Scaffold(
+        appBar: const ProfileAppBar(),
+        body: BlocListener<ProfileBloc, ProfileState>(
+          listener: (context, state) {
+            if (state is ProfileError) {
+              showSnackBar(context, state.message);
+              debugPrint("Error: ${state.message}");
+            } else if (state is ProfileUpdateSuccess) {
+              showSnackBar(context, "Profile updated successfully");
+              context.pop();
+            } else if (state is ProfileLoaded) {
+              // Set values to the text controllers
+              final user = state.user;
+      
+              firstNameController.text = user.firstName;
+              lastNameController.text = user.lastName;
+              emailController.text = user.email;
+      
+              debugPrint("User data loaded: ${user.firstName} ${user.lastName} ${user.email}");
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20,),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Update Details",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          )
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "You can update your name anytime, but your email is fixed and can’t be changed for security reasons.",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                          )
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  TextField(
+                    controller: lastNameController,
+                    decoration: InputDecoration(
+                      labelText: "First Name",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: firstNameController,
+                    decoration: InputDecoration(
+                      labelText: "Last Name",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  
+                  
+                  Container(
                     width: double.infinity,
-                    child: Button(
-                      onTap: () {
-                        String email = emailController.text.trim();
-                        String firstName = firstNameController.text.trim();
-                        String lastName = lastNameController.text.trim();
-
-                        if (email.isEmpty ||
-                            firstName.isEmpty ||
-                            lastName.isEmpty) {
-                          showSnackBar(context, "All fields are required");
-                          return;
+                    child: BlocBuilder<ProfileBloc, ProfileState>(
+                      builder: (context, state) {
+                        if (state is ProfileLoading) {
+                          return const CircularProgressIndicator();
                         }
-
-                        if (!email.contains(".com")) {
-                          showSnackBar(context, "Invalid Email");
-                          return;
-                        }
-
-                        context.read<ProfileBloc>().add(
-                          UpdateUserDetails(userUid!, firstName, lastName),
+                    
+                        return SizedBox(
+                          width: double.infinity,
+                          child: Button(
+                            onTap: () {
+                              String email = emailController.text.trim();
+                              String firstName = firstNameController.text.trim();
+                              String lastName = lastNameController.text.trim();
+                    
+                              if (email.isEmpty ||
+                                  firstName.isEmpty ||
+                                  lastName.isEmpty) {
+                                showSnackBar(context, "All fields are required");
+                                return;
+                              }
+                    
+                              if (!email.contains(".com")) {
+                                showSnackBar(context, "Invalid Email");
+                                return;
+                              }
+                    
+                              context.read<ProfileBloc>().add(
+                                UpdateUserDetails(userUid!, firstName, lastName),
+                              );
+                            },
+                            buttonText: "Update",
+                          ),
                         );
                       },
-                      buttonText: "Update",
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
