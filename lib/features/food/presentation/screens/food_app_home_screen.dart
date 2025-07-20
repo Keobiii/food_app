@@ -238,7 +238,7 @@ class _FoodAppHomeScreenState extends State<FoodAppHomeScreen> {
           );
         }
 
-        return SizedBox.shrink(); // default
+        return SizedBox.shrink(); 
       },
     );
   }

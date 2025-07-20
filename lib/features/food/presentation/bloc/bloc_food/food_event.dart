@@ -24,3 +24,9 @@ class FetchFoodDetailById extends FoodEvent {
   @override
   List<Object?> get props => [id];
 }
+
+class SearchFood extends FoodEvent {
+  final String query;
+
+  SearchFood(this.query);
+}

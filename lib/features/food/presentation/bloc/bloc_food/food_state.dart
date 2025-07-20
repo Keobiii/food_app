@@ -11,12 +11,13 @@ class FoodInitial extends FoodState {}
 class FoodLoading extends FoodState {}
 
 class FoodLoaded extends FoodState {
+  final List<FoodEntity> allFoods;
   final List<FoodEntity> foodList;
 
-  FoodLoaded(this.foodList);
+  FoodLoaded(this.allFoods, this.foodList);
 
   @override
-  List<Object?> get props => [foodList];
+  List<Object?> get props => [allFoods, foodList];
 }
 
 class FoodError extends FoodState {

@@ -31,6 +31,8 @@ class _ProductsItemsDisplayState extends State<ProductsItemsDisplay> {
   void checkUserId() async {
     final uid = await sl<AuthLocalDatasource>().getCachedUserId();
 
+    if (!mounted) return;
+    
     setState(() {
       userUid = uid;
     });
@@ -75,17 +77,17 @@ class _ProductsItemsDisplayState extends State<ProductsItemsDisplay> {
               ),
             ),
         
-            Positioned(
-              top: 10,
-              right: 10,
-              child: GestureDetector(
-                child: CircleAvatar(
-                  radius: 15,
-                  backgroundColor: Colors.red[100],
-                  child: Image.asset("assets/food-delivery/icon/fire.png", height: 22,),
-                ),
-              ),
-            ),
+            // Positioned(
+            //   top: 10,
+            //   right: 10,
+            //   child: GestureDetector(
+            //     child: CircleAvatar(
+            //       radius: 15,
+            //       backgroundColor: Colors.red[100],
+            //       child: Image.asset("assets/food-delivery/icon/fire.png", height: 22,),
+            //     ),
+            //   ),
+            // ),
         
             Positioned(
               top: 0,

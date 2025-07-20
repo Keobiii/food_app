@@ -16,6 +16,7 @@ class SearchFoodScreen extends StatefulWidget {
 
 class _SearchFoodScreenState extends State<SearchFoodScreen> {
   List<FoodEntity> products = [];
+  String _searchQuery = "";
 
   @override
   void initState() {
@@ -33,40 +34,71 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> {
         centerTitle: true,
         forceMaterialTransparency: true,
       ),
-      body: BlocBuilder<FoodBloc, FoodState>(
-        builder: (context, state) {
-          if (state is FoodLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-      
-          if (state is FoodError) {
-            return Center(child: Text("Error: ${state.message}"));
-          }
-      
-          if (state is FoodLoaded) {
-            final products = state.foodList;
-      
-            if (products.isEmpty) {
-              return const Center(child: Text("No Products found"));
-            }
-      
-            return GridView.builder(
-              itemCount: products.length,
-              padding: EdgeInsets.all(10),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.57,
-                crossAxisSpacing: 8,
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                hintText: "Search Products",
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.white,
               ),
-              itemBuilder: (context, index) {
-                return ProductsItemsDisplay(foodEntity: products[index]);
+              onChanged: (value) {
+                 _searchQuery = value.toLowerCase();
+                 context.read<FoodBloc>().add(SearchFood(_searchQuery));
               },
-            );
-          }
-      
-          return const SizedBox.shrink();
-        },
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: BlocBuilder<FoodBloc, FoodState>(
+                builder: (context, state) {
+                  if (state is FoodLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is FoodError) {
+                    return Center(child: Text("Error: ${state.message}"));
+                  }
+
+                  if (state is FoodLoaded) {
+                    // final products = state.foodList;
+                   final products = state.foodList;
+
+                    if (products.isEmpty) {
+                      return const Center(child: Text("No Products found"));
+                    }
+
+                    return GridView.builder(
+                      itemCount: products.length,
+                      padding: EdgeInsets.all(10),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.53,
+                        crossAxisSpacing: 8,
+                      ),
+                      itemBuilder: (context, index) {
+                        return ProductsItemsDisplay(
+                          foodEntity: products[index],
+                        );
+                      },
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+          
+          ],
+        ),
       ),
     );
   }
+
 }

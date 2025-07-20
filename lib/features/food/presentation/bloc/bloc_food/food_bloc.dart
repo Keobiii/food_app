@@ -19,14 +19,15 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
     on<FetchFoodByCategory>(_onGetFoodbyCategory);
     on<FetchAllFood>(_onGetAllFood);
     on<FetchFoodDetailById>(_onGetFoodDetailById);
+    on<SearchFood>(_onSearchFood);
   }
 
   Future<void> _onGetFoodbyCategory(FetchFoodByCategory event, Emitter<FoodState> emit) async {
     emit(FoodLoading());
     try {
-      final foods = await getFoodCategoryUseCase(event.category);
-      emit(FoodLoaded(foods));
-      
+      final categoryFoods = await getFoodCategoryUseCase(event.category);
+      final allFoods = await getAllFoodsUseCase();
+      emit(FoodLoaded(allFoods, categoryFoods));
     } catch (e) {
       emit(FoodError(e.toString()));
     }
@@ -35,8 +36,8 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
   Future<void> _onGetAllFood(FetchAllFood event, Emitter<FoodState> emit) async {
     emit(FoodLoading());
     try {
-      final foodList = await getAllFoodsUseCase();
-      emit(FoodLoaded(foodList));
+      final allFoods = await getAllFoodsUseCase();
+      emit(FoodLoaded(allFoods, allFoods)); // both are the same
     } catch (e) {
       emit(FoodError(e.toString()));
     }
@@ -49,6 +50,16 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
       emit(FoodDetailLoaded(food));
     } catch (e) {
       emit(FoodError(e.toString()));
+    }
+  }
+
+  Future<void> _onSearchFood(SearchFood event, Emitter<FoodState> emit) async {
+    final currentState = state;
+    if (currentState is FoodLoaded) {
+      final filtered = currentState.allFoods.where((food) {
+        return food.name.toLowerCase().contains(event.query.toLowerCase());
+      }).toList();
+      emit(FoodLoaded(currentState.allFoods, filtered));
     }
   }
 }
