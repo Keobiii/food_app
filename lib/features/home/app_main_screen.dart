@@ -19,7 +19,7 @@ class AppMainScreen extends StatefulWidget {
 
 class _AppMainScreenState extends State<AppMainScreen> {
   int _currentIndex = 0;
-  final tabs = ['/home', '/search', '/cart', '/chat', '/profile'];
+  final tabs = ['/home', '/search', '/cart', '/notification', '/profile'];
 
   String? userUid;
   int cartItemCount = 0;
@@ -73,7 +73,7 @@ class _AppMainScreenState extends State<AppMainScreen> {
                         _buildNavItems(Iconsax.home_15, "A", 0),
                         _buildNavItems(CupertinoIcons.search, "B", 1),
                         SizedBox(width: 60),
-                        _buildNavItems(Iconsax.message, "C", 3),
+                        _buildNavItems(Iconsax.notification, "C", 3),
                         _buildNavItems(
                           Iconsax.profile_2user,
                           "Profile",

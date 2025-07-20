@@ -16,6 +16,7 @@ class SupabaseCartDataSource implements CartRemoveDataSource {
       final response = await client.from('cart_items').insert(cartModel.toJson());
       print("Inserted cart: $response");
     } catch (error) {
+      print("Error adding item to cart: $error");
       throw Exception('Failed to add item to cart: $error');
     }
   }
@@ -51,7 +52,6 @@ class SupabaseCartDataSource implements CartRemoveDataSource {
   @override
   Future<void> updateCartQuantity(String cartId, int delta) async {
     try {
-      // Step 1: Fetch current quantity
       final fetchResponse = await client
           .from('cart_items')
           .select('quantity')
@@ -65,7 +65,6 @@ class SupabaseCartDataSource implements CartRemoveDataSource {
       final currentQuantity = fetchResponse['quantity'] as int;
       final newQuantity = currentQuantity + delta;
 
-      // Step 2: Update new quantity
       final updateResponse = await client
           .from('cart_items')
           .update({'quantity': newQuantity})

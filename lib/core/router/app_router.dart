@@ -4,7 +4,7 @@ import 'package:food_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:food_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:food_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:food_app/features/auth/presentation/screens/signup_screen.dart';
-import 'package:food_app/features/chat/presentation/screen/chat_screen.dart';
+import 'package:food_app/features/notification/presentation/screen/notification_screen.dart';
 import 'package:food_app/features/food/data/models/FoodModel.dart';
 import 'package:food_app/features/food/domain/entities/FoodEntity.dart';
 import 'package:food_app/features/food/presentation/screens/food_app_home_screen.dart';
@@ -91,9 +91,9 @@ final GoRouter router = GoRouter(
         ),
 
         GoRoute(
-          path: '/chat',
-          name: 'chat',
-          pageBuilder: (context, state) => fadeTransition(ChatScreen(), state)
+          path: '/notification',
+          name: 'notification',
+          pageBuilder: (context, state) => fadeTransition(NotificationScreen(), state)
         ),
 
         GoRoute(
