@@ -47,11 +47,11 @@ class CartAlreadyExists extends CartState {
   List<Object?> get props => [message];
 }
 
-// class CartCheckOutSuccess extends CartState {
-//   final String message;
+class CartCheckOutSuccess extends CartState {
+  final String message;
 
-//   CartCheckOutSuccess(this.message);
+  CartCheckOutSuccess(this.message);
 
-//   @override
-//   List<Object?> get props => [message];
-// }
+  @override
+  List<Object?> get props => [message];
+}

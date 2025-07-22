@@ -40,7 +40,7 @@ class SupabaseFoodDataSource implements FoodRemoteDataSource {
         .from('food_product')
         .select()
         .eq('id', id)
-        .single(); // ensures you get only one result
+        .single();
 
     return FoodModel.fromJson(response);
   }

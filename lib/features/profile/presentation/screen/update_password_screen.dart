@@ -56,17 +56,17 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
             if (state is ProfileError) {
               showSnackBar(context, state.message);
             } else if (state is UpdatePasswordFailure) {
-              showSnackBar(context, state.message); 
+              showSnackBar(context, state.message);
             } else if (state is ProfileUpdateSuccess) {
               showSnackBar(context, "Password updated successfully");
               oldPasswordController.clear();
               newPasswordController.clear();
               confirmPasswordController.clear();
               context.pop();
-            } 
+            }
           },
           child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20,),
+            padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,9 +80,9 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                         Text(
                           "Update Password",
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
-                          )
+                          ),
                         ),
                         SizedBox(height: 5),
                         Text(
@@ -90,80 +90,99 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.normal,
-                          )
+                          ),
                         ),
                       ],
                     ),
                   ),
                   SizedBox(height: 25),
                   TextField(
-                  controller: oldPasswordController,
-                  decoration: InputDecoration(
-                    labelText: "Current Password",
-                    border: OutlineInputBorder(),
+                    controller: oldPasswordController,
+                    decoration: InputDecoration(
+                      labelText: "Current Password",
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                TextField(
-                  controller: newPasswordController,
-                  decoration: InputDecoration(
-                    labelText: "New Password",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 20),
-                TextField(
-                  controller: confirmPasswordController,
-                  decoration: InputDecoration(
-                    labelText: "Confirm New Password",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
                   SizedBox(height: 20),
-                  
-                  
+                  TextField(
+                    controller: newPasswordController,
+                    decoration: InputDecoration(
+                      labelText: "New Password",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: confirmPasswordController,
+                    decoration: InputDecoration(
+                      labelText: "Confirm New Password",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
                   Container(
                     width: double.infinity,
-                    child:                 BlocBuilder<ProfileBloc, ProfileState>(
-                  builder: (context, state) {
-                    if (state is ProfileLoading) {
-                      return const CircularProgressIndicator();
-                    }
-      
-                    return SizedBox(
-                      width: double.infinity,
-                      child: Button(
-                        onTap: () {
-                          String oldPassword = oldPasswordController.text.trim();
-                          String newPassword = newPasswordController.text.trim();
-                          String confimPassword = confirmPasswordController.text.trim();
-      
-                          if (userUid == null) {
-                            showSnackBar(context, "Please login to update your password");
-                            return;
-                          }
-      
-                          if (oldPassword.isEmpty ||
-                              newPassword.isEmpty ||
-                              confimPassword.isEmpty) {
-                            showSnackBar(context, "All fields are required");
-                            return;
-                          }
-      
-                          if (newPassword != confimPassword) {
-                            showSnackBar(context, "Passwords do not match");
-                            return;
-                          }
-      
-                          context.read<ProfileBloc>().add(
-                            UpdatePassword(userUid!, oldPassword, confimPassword),
-                          );
-                        },
-                        buttonText: "Update",
-                      ),
-                    );
-                  },
-                ),
+                    child: BlocBuilder<ProfileBloc, ProfileState>(
+                      builder: (context, state) {
+                        // if (state is ProfileLoading) {
+                        //   return SizedBox(
+                        //     height: 30,
+                        //     width: 30,
+                        //     child: CircularProgressIndicator(),
+                        //   );
+                        // }
+
+                        return SizedBox(
+                          width: double.infinity,
+                          child: Button(
+                            onTap: () {
+                              String oldPassword =
+                                  oldPasswordController.text.trim();
+                              String newPassword =
+                                  newPasswordController.text.trim();
+                              String confimPassword =
+                                  confirmPasswordController.text.trim();
+
+                              if (userUid == null) {
+                                showSnackBar(
+                                  context,
+                                  "Please login to update your password",
+                                );
+                                return;
+                              }
+
+                              if (oldPassword.isEmpty ||
+                                  newPassword.isEmpty ||
+                                  confimPassword.isEmpty) {
+                                showSnackBar(
+                                  context,
+                                  "All fields are required",
+                                );
+                                return;
+                              }
+
+                              if (newPassword != confimPassword) {
+                                showSnackBar(context, "Passwords do not match");
+                                return;
+                              }
+
+                              context.read<ProfileBloc>().add(
+                                UpdatePassword(
+                                  userUid!,
+                                  oldPassword,
+                                  confimPassword,
+                                ),
+                              );
+                            },
+                            buttonText:
+                                state is ProfileLoading
+                                    ? "Loading..."
+                                    : "Update",
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -173,6 +192,4 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
       ),
     );
   }
-
-
 }

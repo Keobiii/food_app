@@ -119,7 +119,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(CartLoading());
     try {
       await clearCartUseCase(event.userId);
-      // emit(CartCheckOutSuccess("Checkout successful! Your cart has been cleared."));
+      emit(CartCheckOutSuccess("Checkout successful! Your cart has been cleared."));
       emit(CartLoaded([]));
     } catch (e) {
       emit(CartError(e.toString()));

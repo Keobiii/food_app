@@ -73,7 +73,7 @@ class _UpdateDetailsScreenState extends State<UpdateDetailsScreen> {
             }
           },
           child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20,),
+            padding: const EdgeInsets.only(top: 15, left: 20, right: 20,),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +87,7 @@ class _UpdateDetailsScreenState extends State<UpdateDetailsScreen> {
                         Text(
                           "Update Details",
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                           )
                         ),
@@ -125,9 +125,9 @@ class _UpdateDetailsScreenState extends State<UpdateDetailsScreen> {
                     width: double.infinity,
                     child: BlocBuilder<ProfileBloc, ProfileState>(
                       builder: (context, state) {
-                        if (state is ProfileLoading) {
-                          return const CircularProgressIndicator();
-                        }
+                        // if (state is ProfileLoading) {
+                        //   return const CircularProgressIndicator();
+                        // }
                     
                         return SizedBox(
                           width: double.infinity,
@@ -153,7 +153,10 @@ class _UpdateDetailsScreenState extends State<UpdateDetailsScreen> {
                                 UpdateUserDetails(userUid!, firstName, lastName),
                               );
                             },
-                            buttonText: "Update",
+                            buttonText:
+                                state is ProfileLoading
+                                    ? "Loading..."
+                                    : "Update",
                           ),
                         );
                       },

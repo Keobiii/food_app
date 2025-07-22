@@ -51,6 +51,10 @@ class _ViewAllUserCartScreenState extends State<ViewAllUserCartScreen> {
           return Center(child: Text("Error: ${state.message}"));
         }
 
+        if(state is CartCheckOutSuccess) {
+          showSnackBar(context, state.message);
+        }
+
         if (state is CartLoaded) {
           final cartItems = state.carts;
 

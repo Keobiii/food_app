@@ -21,16 +21,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: const Icon(
               Icons.arrow_back_ios_new,
               color: Colors.black,
-              size: 18,
-            ),
-          ),
-          const SizedBox(width: 8),
-          const Text(
-            "Go Back",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+              size: 24,
             ),
           ),
         ],
